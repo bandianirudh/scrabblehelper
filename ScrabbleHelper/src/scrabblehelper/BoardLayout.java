@@ -9,8 +9,6 @@
 
 package scrabblehelper;
 
-import java.util.Arrays;
-
 /**
  *
  * @author Nick
