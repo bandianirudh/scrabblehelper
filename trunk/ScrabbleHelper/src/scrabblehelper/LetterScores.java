@@ -19,12 +19,19 @@ public class LetterScores {
     static char[] alphabet = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
     'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
     
+    public static char EMPTY_SQUARE = Character.MIN_VALUE;
+    public static char OUT_OF_BOUNDS = ' ';
+    
+    
+    
     static int[] scores = {1, 2, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10};
     /** Creates a new instance of LetterScores */
     public LetterScores() {
     }
     
-    
+    public static boolean isValidLetter(char c) {
+        return (Character.isLetter(c));
+    }
     
     public static char getCharFromInt(int i) {
         return alphabet[i];
