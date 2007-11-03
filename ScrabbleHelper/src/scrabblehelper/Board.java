@@ -107,7 +107,7 @@ public class Board {
             for (int loc = 0; loc < word.length; loc++) {
                 int col = loc + startCol;
                 if (getValue(startRow, col) == LetterScores.EMPTY_SQUARE &&
-                        squareHasAdjascentVerticalLetter(loc, loc)) {
+                        squareHasAdjascentVerticalLetter(startRow, loc)) {
                     result.add(getVerticalWordFromSquare(startRow, col, word[loc]));
                 }
             }
@@ -115,7 +115,7 @@ public class Board {
             for (int loc = 0; loc < word.length; loc++) {
                 int row = loc + startRow;
                 if (getValue(row, startCol) == LetterScores.EMPTY_SQUARE &&
-                        squareHasAdjascentHorizontalLetter(loc, loc)) {
+                        squareHasAdjascentHorizontalLetter(loc, startCol)) {
                     result.add(getHorizontalWordFromSquare(row, startCol, word[loc]));
                 }
             }
@@ -150,7 +150,7 @@ public class Board {
         char[] result = getCharLine(topRow + 1, col,
                 bottomRow - topRow - 1, false);
         if (LetterScores.isValidLetter(possibleChar)) {
-            result[row - topRow + 1] = possibleChar;
+            result[row - topRow - 1] = possibleChar;
         }
         return result;
     }
@@ -164,10 +164,10 @@ public class Board {
         while (LetterScores.isValidLetter(getValue(row, ++rightCol))) {
         }
 
-        char[] result = getCharLine(leftCol + 1, col,
+        char[] result = getCharLine(row, leftCol + 1,
                 rightCol - leftCol - 1, true);
         if (LetterScores.isValidLetter(possibleChar)) {
-            result[col - leftCol + 1] = possibleChar;
+            result[col - leftCol - 1] = possibleChar;
         }
         return result;
     }
@@ -182,5 +182,27 @@ public class Board {
 
     public void setLetters(char[][] letters) {
         this.letters = letters;
+    }
+
+    public String getBoardDisplay() {
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < letters[0].length; i++) {
+            sb.append(i);
+            sb.append(" ");
+        }
+        sb.append("\n");
+        for (int row = 0; row < letters.length; row++) {
+            for (int col = 0; col < letters[0].length; col++) {
+                char c = getValue(row, col);
+                if (Character.isLetter(c)) {
+                    sb.append(getValue(row, col));
+                } else {
+                    sb.append(".");
+                }
+                sb.append(" ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 }
