@@ -15,7 +15,7 @@ public class BoardAnagramUtils {
 
     Square[][] processedBoard;
     Board board;
-    IntHashDictionary dictionary;
+    private IntHashDictionary dictionary;
 
     public BoardAnagramUtils(Board board) {
         this.board = board;
@@ -24,11 +24,12 @@ public class BoardAnagramUtils {
 
     public void initalizeProcessedBoard() {
         Dimension d = board.getBoardSize();
-        processedBoard = new Square[d.width][];
-
-        for (Square[] array : processedBoard) {
-            for (int i = 0; i < array.length; i++) {
-                array[i] = new Square();
+        processedBoard = new Square[d.height][];
+        
+        for (int a = 0; a < processedBoard.length; a++) {
+            processedBoard[a] = new Square[d.width];
+            for (int i = 0; i < processedBoard[a].length; i++) {
+                processedBoard[a][i] = new Square();
             }
         }
     }
@@ -37,7 +38,8 @@ public class BoardAnagramUtils {
         char[][] letters = board.getLetters();
         for (int row = 0; row < letters.length; row++) {
             for (int col = 0; col < letters[0].length; col++) {
-                if (board.squareHasAdjascentLetter(row, col)) {
+                if (board.squareHasAdjascentLetter(row, col) &&
+                        board.getValue(row, col) == LetterScores.EMPTY_SQUARE) {
                     StringBuffer sb = new StringBuffer(10);
                     for (int i = 0; i < LetterScores.alphabet.length; i++) {
                         char letter = LetterScores.alphabet[i];
@@ -45,7 +47,7 @@ public class BoardAnagramUtils {
                                 col, letter);
                         boolean letterWorks = true;
                         for (char[] array : strings) {
-                            letterWorks = letterWorks && dictionary.isWord(array);
+                            letterWorks = letterWorks && getDictionary().isWord(array);
                         }
                         if (letterWorks) {
                             sb.append(letter);
@@ -55,6 +57,14 @@ public class BoardAnagramUtils {
                 }
             }
         }
+    }
+
+    public IntHashDictionary getDictionary() {
+        return dictionary;
+    }
+
+    public void setDictionary(IntHashDictionary dictionary) {
+        this.dictionary = dictionary;
     }
 
     public class Square {
