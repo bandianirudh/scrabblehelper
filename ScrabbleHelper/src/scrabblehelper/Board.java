@@ -76,10 +76,8 @@ public class Board {
         boolean result = false;
         char left = getValue(row - 1, col);
         char right = getValue(row + 1, col);
-        result = result || (!(left == LetterScores.EMPTY_SQUARE) ||
-                left == LetterScores.OUT_OF_BOUNDS);
-        result = result || (!(right == LetterScores.EMPTY_SQUARE) ||
-                right == LetterScores.OUT_OF_BOUNDS);
+        result = result || LetterScores.isValidLetter(left);
+        result = result || LetterScores.isValidLetter(right);
         return result;
     }
 
@@ -87,10 +85,8 @@ public class Board {
         boolean result = false;
         char above = getValue(row, col - 1);
         char below = getValue(row, col + 1);
-        result = result || (!(above == LetterScores.EMPTY_SQUARE) ||
-                above == LetterScores.OUT_OF_BOUNDS);
-        result = result || (!(below == LetterScores.EMPTY_SQUARE) ||
-                below == LetterScores.OUT_OF_BOUNDS);
+        result = result || LetterScores.isValidLetter(above);
+        result = result || LetterScores.isValidLetter(below);
         return result;
     }
 
@@ -102,7 +98,7 @@ public class Board {
     public List<char[]> getWords(int startRow, int startCol,
             boolean isAcross, char[] word) {
         ArrayList<char[]> result = new ArrayList<char[]>();
-        result.add(word);
+        if (word.length > 1) result.add(word);
         if (isAcross) {
             for (int loc = 0; loc < word.length; loc++) {
                 int col = loc + startCol;
