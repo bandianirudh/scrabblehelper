@@ -101,8 +101,7 @@ public class IntHashDictionary implements Dictionary {
     
     public static int getIntHashValue(String word) {
         return getIntHashValue(word.toUpperCase().toCharArray());
-    }
-    
+    }  
     
     public static int getIntHashValue(char[] word) {
         int result = 0;
