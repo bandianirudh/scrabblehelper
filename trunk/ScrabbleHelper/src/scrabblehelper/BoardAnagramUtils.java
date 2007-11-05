@@ -5,7 +5,6 @@
 package scrabblehelper;
 
 import java.awt.Dimension;
-import java.util.List;
 
 /**
  *
@@ -25,7 +24,7 @@ public class BoardAnagramUtils {
     public void initalizeProcessedBoard() {
         Dimension d = board.getBoardSize();
         processedBoard = new Square[d.height][];
-        
+
         for (int a = 0; a < processedBoard.length; a++) {
             processedBoard[a] = new Square[d.width];
             for (int i = 0; i < processedBoard[a].length; i++) {
@@ -35,25 +34,39 @@ public class BoardAnagramUtils {
     }
 
     public void generatePossibilities() {
+        initalizeProcessedBoard();
         char[][] letters = board.getLetters();
         for (int row = 0; row < letters.length; row++) {
             for (int col = 0; col < letters[0].length; col++) {
-                if (board.squareHasAdjascentLetter(row, col) &&
-                        board.getValue(row, col) == LetterScores.EMPTY_SQUARE) {
-                    StringBuffer sb = new StringBuffer(10);
+                boolean adjascentHorizontal = false;
+                boolean adjascentVertical = false;
+                Square s = processedBoard[row][col];
+                char squareLetter = board.getValue(row, col);
+
+                adjascentHorizontal = board.squareHasAdjascentHorizontalLetter(row, col);
+                adjascentVertical = board.squareHasAdjascentVerticalLetter(row, col);
+                if (squareLetter == LetterScores.EMPTY_SQUARE && //if it's empty and it either has a horizontal or vertical neighbor
+                        (adjascentHorizontal || adjascentVertical)) {
+                    StringBuffer vertLetters = new StringBuffer(10);
+                    StringBuffer horizLetters = new StringBuffer(10);
                     for (int i = 0; i < LetterScores.alphabet.length; i++) {
                         char letter = LetterScores.alphabet[i];
-                        List<char[]> strings = board.getWordsFromSingleLetterPlay(row,
-                                col, letter);
-                        boolean letterWorks = true;
-                        for (char[] array : strings) {
-                            letterWorks = letterWorks && getDictionary().isWord(array);
+                        if (adjascentHorizontal &&
+                                getDictionary().isWord(board.getHorizontalWordFromSquare(row, col, letter))) {
+                            horizLetters.append(letter);
                         }
-                        if (letterWorks) {
-                            sb.append(letter);
+                        if (adjascentVertical &&
+                                getDictionary().isWord(board.getVerticalWordFromSquare(row, col, letter))) {
+                            vertLetters.append(letter);
                         }
                     }
-                    processedBoard[row][col].possibilities = sb.toString().toCharArray();
+                    s.horizontalPossibilities = horizLetters.toString().toCharArray();
+                    s.verticalPossibilities = vertLetters.toString().toCharArray();
+
+                    s.horizontalAdjascent = adjascentHorizontal;
+                    s.verticalAdjascent = adjascentVertical;
+                } else if (LetterScores.isValidLetter(squareLetter)) {
+                    s.letter = squareLetter;
                 }
             }
         }
@@ -69,10 +82,25 @@ public class BoardAnagramUtils {
 
     public class Square {
 
-        char[] possibilities;
+        boolean verticalAdjascent = false;
+        boolean horizontalAdjascent = false;
+        char[] horizontalPossibilities = new char[0];
+        char[] verticalPossibilities = new char[0];
+        char letter = LetterScores.EMPTY_SQUARE;
 
         public Square() {
-            possibilities = new char[0];
+        }
+
+        public boolean hasAdjascent() {
+            return verticalAdjascent || horizontalAdjascent;
+        }
+
+        public boolean isConnectedToRestOfBoard() {
+            return hasAdjascent() || LetterScores.isValidLetter(letter);
+        }
+
+        public boolean isOccupied() {
+            return letter != LetterScores.EMPTY_SQUARE && letter != LetterScores.OUT_OF_BOUNDS;
         }
     }
 }
