@@ -21,6 +21,7 @@ public class LetterScores {
     
     public static char EMPTY_SQUARE = Character.MIN_VALUE;
     public static char OUT_OF_BOUNDS = ' ';
+    public static char UNUSED_BLANK = '0';
     
     
     
