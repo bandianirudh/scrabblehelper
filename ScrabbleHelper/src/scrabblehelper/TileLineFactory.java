@@ -28,7 +28,7 @@ public class TileLineFactory {
         ArrayList<TileLine> result = new ArrayList<TileLine>(100);
 
         // scan across
-        for (int row = 0; row < processedBoard.length; row++) {  
+        for (int row = 0; row < processedBoard.length; row++) {
             boolean rowConnected = false;
             check:
             for (int col = 0; col < processedBoard[0].length; col++) {  // scan row for any worthwhile connected spots
@@ -46,7 +46,8 @@ public class TileLineFactory {
                 }
                 int playedTiles = 1;
                 boolean isConnected = false;
-                endColSearch:  for (int endCol = startCol; endCol < processedBoard[row].length && playedTiles <= 7; endCol++) {
+                endColSearch:
+                for (int endCol = startCol; endCol < processedBoard[row].length && playedTiles <= 7; endCol++) {
                     Square s = processedBoard[row][endCol];
                     if (s.isOccupied()) {
                         isConnected = true;
@@ -55,7 +56,7 @@ public class TileLineFactory {
                     playedTiles++;
                     if (s.hasAdjascent()) {
                         isConnected = true;
-                        if(!s.horizontalAdjascent && s.verticalPossibilities.length == 0) {
+                        if (!s.horizontalAdjascent && s.verticalPossibilities.length == 0) {
                             break endColSearch;
                         }
                     }
@@ -65,8 +66,8 @@ public class TileLineFactory {
                 }
             }
         }
-        
-        
+
+
         //scan vertically
         for (int col = 0; col < processedBoard[0].length; col++) {
             boolean colConnected = false;
@@ -86,7 +87,8 @@ public class TileLineFactory {
                 }
                 int playedTiles = 1;
                 boolean isConnected = false;
-                endRowSearch: for (int endRow = startRow; endRow < processedBoard.length && playedTiles <= 7; endRow++) {
+                endRowSearch:
+                for (int endRow = startRow; endRow < processedBoard.length && playedTiles <= 7; endRow++) {
                     Square s = processedBoard[startRow][col];
                     if (s.isOccupied()) {
                         isConnected = true;
@@ -95,7 +97,7 @@ public class TileLineFactory {
                     playedTiles++;
                     if (s.hasAdjascent()) {
                         isConnected = true;
-                        if(!s.verticalAdjascent && s.horizontalPossibilities.length == 0) {
+                        if (!s.verticalAdjascent && s.horizontalPossibilities.length == 0) {
                             break endRowSearch;
                         }
                     }
@@ -121,6 +123,29 @@ public class TileLineFactory {
             this.startCol = startCol;
             this.length = length;
             this.isAcross = isAcross;
+        }
+
+        public int getRow(int length) {
+            int result = startRow;
+            if (!isAcross) {
+                result += length;
+            }
+            return result;
+        }
+
+        public int getCol(int length) {
+            int result = startCol;
+            if (isAcross) {
+                result += length;
+            }
+            return result;
+        }
+        
+        @Override
+        public String toString() {
+            String result = "startRow = " + startRow + "; startCol = " + startCol + "; length = " + length +
+                    "; isAcross" + isAcross;
+            return result;
         }
     }
 }

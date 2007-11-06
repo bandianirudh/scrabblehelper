@@ -4,7 +4,9 @@
  */
 package scrabblehelper;
 
+import java.util.List;
 import junit.framework.TestCase;
+import scrabblehelper.BoardAnagramUtils.WordPlacement;
 
 /**
  *
@@ -13,12 +15,11 @@ import junit.framework.TestCase;
 public class BoardAnagramUtilsTest extends TestCase {
 
     public static IntHashDictionary ihd;
-    
     static {
         ihd = new IntHashDictionary();
         System.out.println(BoardFactory.getSampleBoard().getBoardDisplay());
     }
-    
+
     public BoardAnagramUtilsTest(String testName) {
         super(testName);
     }
@@ -26,7 +27,7 @@ public class BoardAnagramUtilsTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        
+
     }
 
     @Override
@@ -51,5 +52,16 @@ public class BoardAnagramUtilsTest extends TestCase {
         BoardAnagramUtils instance = new BoardAnagramUtils(BoardFactory.getSampleBoard());
         instance.setDictionary(ihd);
         instance.generatePossibilities();
+    }
+
+    public void testFindAllBoardPossibilities() {
+        System.out.println("findAllBoardPossibilities");
+        BoardAnagramUtils instance = new BoardAnagramUtils(BoardFactory.getSampleBoard());
+        instance.setDictionary(ihd);
+        Rack r = new Rack();
+        r.letters = "SECRETS".toCharArray();
+        instance.setRack(r);
+        List<WordPlacement> result = instance.findAllBoardPossibilities();
+        System.out.println(result.size());
     }
 }
