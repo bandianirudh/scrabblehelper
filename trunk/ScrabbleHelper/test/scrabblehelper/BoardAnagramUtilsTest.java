@@ -7,7 +7,6 @@ package scrabblehelper;
 import java.util.Arrays;
 import java.util.List;
 import junit.framework.TestCase;
-import scrabblehelper.BoardAnagramUtils.WordPlacement;
 
 /**
  *
@@ -56,9 +55,9 @@ public class BoardAnagramUtilsTest extends TestCase {
     }*/
     public void testFindAllBoardPossibilities() {
         System.out.println("findAllBoardPossibilities");
-        BoardAnagramUtils instance = new BoardAnagramUtils(BoardFactory.getSmallSample());
+        BoardAnagramUtils instance = new BoardAnagramUtils(BoardFactory.getSampleBoard());
         instance.setDictionary(ihd);
-        System.out.println(BoardFactory.getSmallSample().getBoardDisplay());
+        System.out.println(BoardFactory.getSampleBoard().getBoardDisplay());
         Arrays.sort(LetterScores.allLetters);
         Rack r = new Rack();
         r.letters = "SELSOND".toCharArray();
