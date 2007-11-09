@@ -46,7 +46,7 @@ public class TileLineFactoryTest extends TestCase {
         Square[][] processedBoard = bau.processedBoard;
         TileLineFactory instance = new TileLineFactory(b);
 
-        ArrayList<TileLineFactory.TileLine> result = instance.generateTileLines(processedBoard);
+        ArrayList<TileLine> result = instance.generateTileLines(processedBoard);
         assertTrue(result.size() > 0);
     }
 }

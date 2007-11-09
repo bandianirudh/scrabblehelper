@@ -89,25 +89,22 @@ public class BoardAnagramUtils {
     public List<WordPlacement> findAllBoardPossibilities() {
         ArrayList<WordPlacement> result = new ArrayList<WordPlacement>(100);
 
-        AnagramPermuter permuter = new AnagramPermuter(rack.letters);
-        TileLineFactory t = new TileLineFactory(board);
-        generatePossibilities();
-        ArrayList<TileLineFactory.TileLine> lines = t.generateTileLines(processedBoard);
         char[] sortedRack = rack.letters.clone();
         Arrays.sort(sortedRack);
         
-        System.out.println(lines.size());
+        AnagramPermuter permuter = new AnagramPermuter(sortedRack);
+        TileLineFactory t = new TileLineFactory(board);
+        
+        generatePossibilities();
+        
+        ArrayList<TileLine> lines = t.generateTileLines(processedBoard);
 
         
-        int count = 0;
-        for (TileLineFactory.TileLine tl : lines) {
-            System.out.println(count++);
-            System.out.println(tl.toString());
-            System.out.println(result.size());
+        for (TileLine tl : lines) {
             permuter.set(getOccupiedLetters(tl), getLetterPossibilitiesInLine(tl), tl);
-            permuter.findValidWords();
             List<char[]> resultWords = permuter.findValidWords();
             for (char[] word : resultWords) {
+                char[] fullWord;
                 result.add(new WordPlacement(tl, board.getWords(tl.startRow, tl.startCol, tl.isAcross, word)));
                 System.out.println(new String(word));
             }
@@ -116,40 +113,52 @@ public class BoardAnagramUtils {
         return result;
     }
 
-    public char[][] getLetterPossibilitiesInLine(TileLineFactory.TileLine line) {
+    public char[][] getLetterPossibilitiesInLine(int startRow, int startCol, int length, boolean isAcross) {
+        return getLetterPossibilitiesInLine(new TileLine(startRow, startCol, length, isAcross));
+    }
+    
+    public char[][] getLetterPossibilitiesInLine(TileLine line) {
         char[][] result = new char[line.length][];
+        int row = line.startRow;
+        int col = line.startCol;
+
+        if (line.isAcross) {
+            col--;
+        } else {
+            row--;
+        }
         for (int i = 0; i < line.length; i++) {
-            int row = line.startRow;
-            int col = line.startCol;
+
             if (line.isAcross) {
-                col += i;
+                col++;
             } else {
-                row += i;
+                row++;
             }
 
             Square s = processedBoard[row][col];
             if (s.hasAdjascent()) {
                 if (s.isOccupied()) {
                     result[i] = EMPTY_CHAR_ARRAY;
-                } else if (line.isAcross && s.horizontalAdjascent) {
+                } else if (!line.isAcross && s.horizontalAdjascent) {
                     result[i] = s.horizontalPossibilities;
-                } else if (!line.isAcross && s.verticalAdjascent) {
+                } else if (line.isAcross && s.verticalAdjascent) {
                     result[i] = s.verticalPossibilities;
                 } else {
                     result[i] = LetterScores.alphabet;
                 }
             } else {
-                result[i] = EMPTY_CHAR_ARRAY;
+                result[i] = LetterScores.alphabet;
             }
             Arrays.sort(result[i]);
         }
         return result;
     }
 
-    public char[] getOccupiedLetters(TileLineFactory.TileLine line) {
+    public char[] getOccupiedLetters(TileLine line) {
         char[] result = new char[line.length];
         Arrays.fill(result, LetterScores.EMPTY_SQUARE);
-        for (int i = 0; i < line.length; i++) {
+        for (int i = 0; i <
+                line.length; i++) {
             int row = line.startRow;
             int col = line.startCol;
             if (line.isAcross) {
@@ -157,10 +166,12 @@ public class BoardAnagramUtils {
             } else {
                 row += i;
             }
+
             Square s = processedBoard[row][col];
             if (s.isOccupied()) {
                 result[i] = s.letter;
             }
+
         }
         return result;
     }
@@ -200,10 +211,10 @@ public class BoardAnagramUtils {
     public class WordPlacement {
 
         int score;
-        private TileLineFactory.TileLine line;
+        private TileLine line;
         private List<char[]> words;
 
-        public WordPlacement(TileLineFactory.TileLine line, List<char[]> words) {
+        public WordPlacement(TileLine line, List<char[]> words) {
             this.line = line;
             this.words = words;
         }
@@ -216,11 +227,11 @@ public class BoardAnagramUtils {
             this.words = words;
         }
 
-        public TileLineFactory.TileLine getLine() {
+        public TileLine getLine() {
             return line;
         }
 
-        public void setLine(TileLineFactory.TileLine line) {
+        public void setLine(TileLine line) {
             this.line = line;
         }
     }
@@ -230,7 +241,7 @@ public class BoardAnagramUtils {
         private char[] rackLetters;
         private char[][] possibilities;
         private char[] occupiedLetters;
-        private TileLineFactory.TileLine tileLine;
+        private TileLine tileLine;
         private List<char[]> resultWords;
         private char[] currentWord;
         private boolean[] useable;
@@ -247,7 +258,7 @@ public class BoardAnagramUtils {
         }
 
         public void set(char[] occupiedLetters, char[][] possibilities,
-                TileLineFactory.TileLine tileLine) {
+                TileLine tileLine) {
             this.occupiedLetters = occupiedLetters;
             this.possibilities = possibilities;
             this.tileLine = tileLine;
@@ -261,17 +272,29 @@ public class BoardAnagramUtils {
 
         private void permute() {
             if (currentSquare == getTileLine().length) { //do your thing if it's the last line
-                List<char[]> possibleWords = board.getWords(getTileLine().startRow, getTileLine().startCol, getTileLine().isAcross, currentWord);
+                List<char[]> possibleWords = board.getWords(getTileLine().startRow,
+                        getTileLine().startCol, getTileLine().isAcross, currentWord);
+
+                //tester:  board.getWords(1, 0, true, "ODE".toCharArray())
+                //
                 for (char[] possibleWord : possibleWords) {
                     if (!dictionary.isWord(possibleWord)) {
                         return;
                     }
                 }
+                if (possibleWords.size() == 0) {
+                    return;
+                }
                 getResultWords().add(currentWord);
+                board.getWords(getTileLine().startRow,
+                        getTileLine().startCol, getTileLine().isAcross, currentWord);
                 return;
             } else {
                 if (getOccupiedLetters()[currentSquare] != LetterScores.EMPTY_SQUARE) {
                     currentWord[currentSquare] = getOccupiedLetters()[currentSquare];
+                    currentSquare++;
+                    permute();
+                    currentSquare--;
                 } else {
                     for (int i = 0; i < rackLetters.length; i++) {
                         if (useable[currentSquare] &&
@@ -337,11 +360,11 @@ public class BoardAnagramUtils {
             this.occupiedLetters = occupiedLetters;
         }
 
-        public TileLineFactory.TileLine getTileLine() {
+        public TileLine getTileLine() {
             return tileLine;
         }
 
-        public void setTileLine(TileLineFactory.TileLine tileLine) {
+        public void setTileLine(TileLine tileLine) {
             this.tileLine = tileLine;
         }
 

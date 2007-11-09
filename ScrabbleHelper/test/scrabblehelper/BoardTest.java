@@ -124,10 +124,10 @@ public class BoardTest extends TestCase {
     public void testGetWords() {
         System.out.println("getWords");
         int startRow = 1;
-        int startCol = 11;
+        int startCol = 0;
         boolean isAcross = true;
-        char[] word = "SCALDING".toCharArray();
-        Board instance = BoardFactory.getSampleBoard();
+        char[] word = "MISS".toCharArray();
+        Board instance = BoardFactory.getSmallSample();
         List<char[]> result = new ArrayList<char[]>();
         for (int i = 0; i < 1000; i++) {
             result = instance.getWords(startRow, startCol, isAcross, word);
@@ -138,8 +138,8 @@ public class BoardTest extends TestCase {
         }
 
         assertTrue(conv.contains("ES"));
-        assertTrue(conv.contains("SCALDING"));
-        
+        assertTrue(conv.contains("MISS") && conv.contains("AM") && conv.contains("XI"));
+
         System.out.println("BOARD");
         System.out.println(instance.getBoardDisplay());
     }
@@ -154,14 +154,24 @@ public class BoardTest extends TestCase {
         char letter = 'O';
         Board instance = BoardFactory.getSampleBoard();
         List<char[]> result = instance.getWordsFromSingleLetterPlay(row, col, letter);
-        
-        
+
+
         ArrayList<String> conv = new ArrayList<String>();
         for (char[] c : result) {
             conv.add(new String(c));
         }
         assertTrue(conv.contains("DO"));
         assertTrue(conv.contains("ON"));
+    }
+    
+    public void testGetVerticalWordFromWordPlacement() {
+        System.out.println("getVerticalWordFromWordPlacement");
+        int row = 1;
+        int col = 0;
+        char[] placement = "HELLO".toCharArray();
+        Board instance = BoardFactory.getSmallSample();
+        char[] result = instance.getVerticalWordFromWordPlacement(row, col, placement);
+        System.out.println(new String(result));
     }
 
     /**

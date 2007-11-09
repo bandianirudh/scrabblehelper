@@ -17,7 +17,6 @@ public class BoardAnagramUtilsTest extends TestCase {
     public static IntHashDictionary ihd;
     static {
         ihd = new IntHashDictionary();
-        System.out.println(BoardFactory.getSampleBoard().getBoardDisplay());
     }
 
     public BoardAnagramUtilsTest(String testName) {
@@ -38,30 +37,50 @@ public class BoardAnagramUtilsTest extends TestCase {
     /**
      * Test of initalizeProcessedBoard method, of class BoardAnagramUtils.
      */
-    public void testInitalizeProcessedBoard() {
+    /*  public void testInitalizeProcessedBoard() {
         System.out.println("initalizeProcessedBoard");
         BoardAnagramUtils instance = new BoardAnagramUtils(BoardFactory.getSampleBoard());
         instance.initalizeProcessedBoard();
-    }
+    }/*
 
     /**
      * Test of generatePossibilities method, of class BoardAnagramUtils.
      */
-    public void testGeneratePossibilities() {
+    /* public void testGeneratePossibilities() {
         System.out.println("generatePossibilities");
         BoardAnagramUtils instance = new BoardAnagramUtils(BoardFactory.getSampleBoard());
         instance.setDictionary(ihd);
         instance.generatePossibilities();
-    }
-
+    }*/
     public void testFindAllBoardPossibilities() {
+        System.out.println("findAllBoardPossibilities");
+        BoardAnagramUtils instance = new BoardAnagramUtils(BoardFactory.getSmallSample());
+        instance.setDictionary(ihd);
+        System.out.println(BoardFactory.getSmallSample().getBoardDisplay());
+        Rack r = new Rack();
+        r.letters = "SELSOND".toCharArray();
+        instance.setRack(r);
+        List<WordPlacement> result = instance.findAllBoardPossibilities();
+        System.out.println(result.size());
+    }
+    public void testPermuter() {
         System.out.println("findAllBoardPossibilities");
         BoardAnagramUtils instance = new BoardAnagramUtils(BoardFactory.getSampleBoard());
         instance.setDictionary(ihd);
         Rack r = new Rack();
         r.letters = "SECRETS".toCharArray();
         instance.setRack(r);
-        List<WordPlacement> result = instance.findAllBoardPossibilities();
-        System.out.println(result.size());
+    }
+
+    public void testGetLetterPossibilitiesInLine() {
+        System.out.println("testGeneratePossibilities");
+        BoardAnagramUtils instance = new BoardAnagramUtils(BoardFactory.getSmallSample());
+        instance.setDictionary(ihd);
+        System.out.println(BoardFactory.getSmallSample().getBoardDisplay());
+        Rack r = new Rack();
+        r.letters = "MISSALT".toCharArray();
+        instance.generatePossibilities();
+        char[][] result = instance.getLetterPossibilitiesInLine(1, 0, 4, false);
+        System.out.println(result[0][0]);
     }
 }
