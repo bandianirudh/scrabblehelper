@@ -4,6 +4,7 @@
  */
 package scrabblehelper;
 
+import java.util.Arrays;
 import java.util.List;
 import junit.framework.TestCase;
 import scrabblehelper.BoardAnagramUtils.WordPlacement;
@@ -14,6 +15,7 @@ import scrabblehelper.BoardAnagramUtils.WordPlacement;
  */
 public class BoardAnagramUtilsTest extends TestCase {
 
+    
     public static IntHashDictionary ihd;
     static {
         ihd = new IntHashDictionary();
@@ -57,6 +59,7 @@ public class BoardAnagramUtilsTest extends TestCase {
         BoardAnagramUtils instance = new BoardAnagramUtils(BoardFactory.getSmallSample());
         instance.setDictionary(ihd);
         System.out.println(BoardFactory.getSmallSample().getBoardDisplay());
+        Arrays.sort(LetterScores.allLetters);
         Rack r = new Rack();
         r.letters = "SELSOND".toCharArray();
         instance.setRack(r);
