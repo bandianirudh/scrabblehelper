@@ -23,7 +23,7 @@ public class BoardFactory {
     public static Board getSmallSample() {
         Board b = new Board();
 
-        b.setCharLine(0, 0, "AXE".toCharArray(), true);
+        b.setCharLine(0, 0, "AXEL".toCharArray(), true);
 
         return b;
     }
