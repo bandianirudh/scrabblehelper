@@ -129,7 +129,7 @@ public class BoardAnagramUtils {
             }
             System.out.println("TileLine ###: " + i);
         }
-
+        System.out.println(result.size());
         return result;
     }
 
@@ -288,15 +288,33 @@ public class BoardAnagramUtils {
             currentWord = new char[tileLine.length];
             currentSquare = 0;
             resultWords.clear();
+            this.frequency = frequencyBackup.clone();
         }
 
         private void permute() {
-            if (currentSquare == getTileLine().length) { //do your thing if it's the last square
-                List<char[]> possibleWords = board.getWords(getTileLine().startRow,
-                        getTileLine().startCol, getTileLine().isAcross, currentWord);
+            if (currentSquare == tileLine.length) { //do your thing if it's the last square
+                List<char[]> possibleWords = board.getWords(tileLine.startRow,
+                        tileLine.startCol, tileLine.isAcross, currentWord);
 
                 //tester:  board.getWords(1, 0, true, "ODE".toCharArray())
                 //
+                
+                if (tileLine.length > 1) {
+                    if (tileLine.isAcross) {
+                        if (!getDictionary().isWord(
+                                board.getHorizontalWordFromWordPlacement(
+                                tileLine.startRow, tileLine.startCol, currentWord))) {
+                            return;
+                        }
+                    } else {
+                        if (!getDictionary().isWord(
+                                board.getVerticalWordFromWordPlacement(
+                                tileLine.startRow, tileLine.startCol, currentWord))) {
+                            return;
+                        }
+                    }
+                }
+                
                 for (char[] possibleWord : possibleWords) {
                     if (!dictionary.isWord(possibleWord)) {
                         return;
@@ -308,30 +326,30 @@ public class BoardAnagramUtils {
                 getResultWords().add(currentWord.clone());
                 return;
             } else {
-                if (getOccupiedLetters()[currentSquare] != LetterScores.EMPTY_SQUARE) {
-                    currentWord[currentSquare] = getOccupiedLetters()[currentSquare];
+                if (occupiedLetters[currentSquare] != LetterScores.EMPTY_SQUARE) {
+                    currentWord[currentSquare] = occupiedLetters[currentSquare];
                     currentSquare++;
                     permute();
                     currentSquare--;
                 } else {
                     for (int i = 0; i < rackLettersReduced.length; i++) {
-                        if (frequency[currentSquare] > 0 &&
+                        if (frequency[i] > 0 &&
                                 Arrays.binarySearch(possibilities[currentSquare], rackLettersReduced[i]) >= 0) {
-                            currentWord[currentSquare] = getRackLetters()[i];
-                            frequency[currentSquare]--;
+                            currentWord[currentSquare] = rackLettersReduced[i];
+                            frequency[i]--;
                             currentSquare++;
                             permute();
                             currentSquare--;
-                            frequency[currentSquare]++;
+                            frequency[i]++;
                         } else if (isUseableBlank(i)) {
                             for (int aLetter = 0; aLetter < LetterScores.alphabet.length; aLetter++) {
-                                if (Arrays.binarySearch(getPossibilities()[currentSquare], LetterScores.alphabet[aLetter]) >= 0) {
+                                if (Arrays.binarySearch(possibilities[currentSquare], LetterScores.alphabet[aLetter]) >= 0) {
                                     currentWord[currentSquare] = LetterScores.alphabet[aLetter];
-                                    frequency[currentSquare]--;
+                                    frequency[i]--;
                                     currentSquare++;
                                     permute();
                                     currentSquare--;
-                                    frequency[currentSquare]++;
+                                    frequency[i]++;
                                 }
                             }
                         }
@@ -342,7 +360,7 @@ public class BoardAnagramUtils {
         }
 
         public boolean containsUseableBlank() {
-            for (int i = 0; i < getRackLetters().length; i++) {
+            for (int i = 0; i < rackLettersReduced.length; i++) {
                 if (isUseableBlank(i)) {
                     return true;
                 }
@@ -351,39 +369,7 @@ public class BoardAnagramUtils {
         }
 
         public boolean isUseableBlank(int rackPosition) {
-            return getRackLetters()[rackPosition] == LetterScores.UNUSED_BLANK && frequency[rackPosition] > 0;
-        }
-
-        public char[] getRackLetters() {
-            return rackLettersReduced;
-        }
-
-        public void setRackLetters(char[] rackLetters) {
-            this.rackLettersReduced = rackLetters;
-        }
-
-        public char[][] getPossibilities() {
-            return possibilities;
-        }
-
-        public void setPossibilities(char[][] possibilities) {
-            this.possibilities = possibilities;
-        }
-
-        public char[] getOccupiedLetters() {
-            return occupiedLetters;
-        }
-
-        public void setOccupiedLetters(char[] occupiedLetters) {
-            this.occupiedLetters = occupiedLetters;
-        }
-
-        public TileLine getTileLine() {
-            return tileLine;
-        }
-
-        public void setTileLine(TileLine tileLine) {
-            this.tileLine = tileLine;
+            return rackLettersReduced[rackPosition] == LetterScores.UNUSED_BLANK && frequency[rackPosition] > 0;
         }
 
         public List<char[]> getResultWords() {
@@ -419,17 +405,18 @@ public class BoardAnagramUtils {
                     freqHolder.add(freq);
                 }
             }
-            char[] rackLettersReduced = new char[tempHolder.size()];
+            char[] rackLettersReduced1 = new char[tempHolder.size()];
             for (int i = 0; i < tempHolder.size(); i++) {
-                rackLettersReduced[i] = tempHolder.get(i);
+                rackLettersReduced1[i] = tempHolder.get(i);
             }
-            this.rackLettersReduced = rackLettersReduced;
+            this.rackLettersReduced = rackLettersReduced1;
 
-            int[] frequency = new int[freqHolder.size()];
+            int[] frequency1 = new int[freqHolder.size()];
             for (int i = 0; i < freqHolder.size(); i++) {
-                frequency[i] = freqHolder.get(i);
+                frequency1[i] = freqHolder.get(i);
             }
-            this.frequencyBackup = frequency;
+            this.frequencyBackup = frequency1;
+            this.frequency = this.frequencyBackup.clone();
         }
     }
 }
