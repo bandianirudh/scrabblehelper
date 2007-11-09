@@ -133,6 +133,11 @@ public class Board {
         }
         return result;
     }
+    
+    public int getScoreFromWord(int row, int col, char[] word) {
+        
+        return 0;
+    }
 
     public List<char[]> getWordsFromSingleLetterPlay(int row, int col, char letter) {
         ArrayList<char[]> result = new ArrayList<char[]>();
