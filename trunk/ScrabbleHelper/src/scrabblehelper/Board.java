@@ -16,7 +16,6 @@ import java.util.List;
 public class Board {
 
     private char[][] letters;
-    private char[][] storedLetters;
 
     public Board() {
         initializeLetters();
@@ -98,22 +97,38 @@ public class Board {
     public List<char[]> getWords(int startRow, int startCol,
             boolean isAcross, char[] word) {
         ArrayList<char[]> result = new ArrayList<char[]>();
-        if (word.length > 1) result.add(word);
         if (isAcross) {
+            //look for parallel words
             for (int loc = 0; loc < word.length; loc++) {
                 int col = loc + startCol;
                 if (getValue(startRow, col) == LetterScores.EMPTY_SQUARE &&
                         squareHasAdjascentVerticalLetter(startRow, loc)) {
-                    result.add(getVerticalWordFromSquare(startRow, col, word[loc]));
+                    char[] vWord = getVerticalWordFromSquare(startRow, col, word[loc]);
+                    if (vWord.length > 1) {
+                        result.add(vWord);
+                    }
                 }
+            }
+            //look for words in series
+            char[] horizWord = getHorizontalWordFromWordPlacement(startRow, startCol, word);
+            if (horizWord.length > 1) {
+                result.add(horizWord);
             }
         } else {
             for (int loc = 0; loc < word.length; loc++) {
                 int row = loc + startRow;
                 if (getValue(row, startCol) == LetterScores.EMPTY_SQUARE &&
                         squareHasAdjascentHorizontalLetter(loc, startCol)) {
-                    result.add(getHorizontalWordFromSquare(row, startCol, word[loc]));
+                    char[] hWord = getHorizontalWordFromSquare(row, startCol, word[loc]);
+                    if (hWord.length > 1) {
+                        result.add(hWord);
+                    }
                 }
+            }
+            //look for words in series
+            char[] vertWord = getVerticalWordFromWordPlacement(startRow, startCol, word);
+            if (vertWord.length > 1) {
+                result.add(vertWord);
             }
         }
         return result;
@@ -165,6 +180,46 @@ public class Board {
         if (LetterScores.isValidLetter(possibleChar)) {
             result[col - leftCol - 1] = possibleChar;
         }
+        return result;
+    }
+
+    public char[] getVerticalWordFromWordPlacement(int startRow, int col, char[] letters) {
+        int topRow = startRow;
+        int bottomRow = startRow + letters.length - 1;
+
+        while (LetterScores.isValidLetter(getValue(--topRow, col))) {
+        }
+
+        while (LetterScores.isValidLetter(getValue(++bottomRow, col))) {
+        }
+
+        char[] result = getCharLine(topRow + 1, col,
+                bottomRow - topRow - 1, false);
+        
+        for (int i = 0; i < letters.length; i++) {
+            result[startRow - topRow + i - 1] = letters[i];
+        }
+        
+        return result;
+    }
+
+    public char[] getHorizontalWordFromWordPlacement(int row, int startCol, char[] letters) {
+        int leftCol = startCol;
+        int rightCol = startCol + letters.length - 1;
+
+        while (LetterScores.isValidLetter(getValue(row, --leftCol))) {
+        }
+
+        while (LetterScores.isValidLetter(getValue(row, ++rightCol))) {
+        }
+
+        char[] result = getCharLine(row, leftCol + 1,
+                rightCol - leftCol - 1, true);
+        
+        for (int i = 0; i < letters.length; i++) {
+            result[startCol - leftCol + i - 1] = letters[i];
+        }
+        
         return result;
     }
 
