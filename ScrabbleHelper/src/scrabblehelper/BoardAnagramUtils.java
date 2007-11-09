@@ -105,8 +105,13 @@ public class BoardAnagramUtils {
             List<char[]> resultWords = permuter.findValidWords();
             for (char[] word : resultWords) {
                 char[] fullWord;
+                if (tl.isAcross) {
+                    fullWord = board.getHorizontalWordFromWordPlacement(tl.startRow, tl.startCol, word);
+                } else {
+                    fullWord = board.getVerticalWordFromWordPlacement(tl.startRow, tl.startCol, word);
+                }
                 result.add(new WordPlacement(tl, board.getWords(tl.startRow, tl.startCol, tl.isAcross, word)));
-                System.out.println(new String(word));
+                System.out.println(new String(fullWord));
             }
         }
 
@@ -242,7 +247,7 @@ public class BoardAnagramUtils {
         private char[][] possibilities;
         private char[] occupiedLetters;
         private TileLine tileLine;
-        private List<char[]> resultWords;
+        private List<char[]> resultWords = new ArrayList<char[]>(20);
         private char[] currentWord;
         private boolean[] useable;
         private int currentSquare;
@@ -252,6 +257,7 @@ public class BoardAnagramUtils {
         }
 
         public List<char[]> findValidWords() {
+            resultWords.clear();
             currentSquare = 0;
             permute();
             return resultWords;
@@ -267,7 +273,7 @@ public class BoardAnagramUtils {
             useable = new boolean[tileLine.length];
             Arrays.fill(useable, true);
             currentSquare = 0;
-            resultWords = new ArrayList<char[]>();
+            resultWords.clear();
         }
 
         private void permute() {
@@ -285,9 +291,7 @@ public class BoardAnagramUtils {
                 if (possibleWords.size() == 0) {
                     return;
                 }
-                getResultWords().add(currentWord);
-                board.getWords(getTileLine().startRow,
-                        getTileLine().startCol, getTileLine().isAcross, currentWord);
+                getResultWords().add(currentWord.clone());
                 return;
             } else {
                 if (getOccupiedLetters()[currentSquare] != LetterScores.EMPTY_SQUARE) {
