@@ -1,4 +1,4 @@
-package scrabblehelper;
+package scrabbletools;
 
 import java.util.List;
 

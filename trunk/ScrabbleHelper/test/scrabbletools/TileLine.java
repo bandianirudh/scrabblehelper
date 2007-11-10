@@ -7,8 +7,10 @@
  * and open the template in the editor.
  */
 
-package scrabblehelper;
+package scrabbletools;
 
+import scrabbletools.LetterScores;
+import scrabbletools.Word;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
