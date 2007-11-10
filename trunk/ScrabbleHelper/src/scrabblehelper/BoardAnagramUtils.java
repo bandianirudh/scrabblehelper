@@ -118,19 +118,18 @@ public class BoardAnagramUtils {
             permuter.set(getOccupiedLetters(tl), getLetterPossibilitiesInLine(tl), tl);
             List<char[]> resultWords = permuter.findValidWords();
             for (char[] word : resultWords) {
-                char[] fullWord;
+                /*char[] fullWord;
                 if (tl.isAcross) {
                     fullWord = board.getHorizontalWordFromWordPlacement(tl.startRow, tl.startCol, word);
                 } else {
                     fullWord = board.getVerticalWordFromWordPlacement(tl.startRow, tl.startCol, word);
-                }
-                result.add(new WordPlacement(tl, board.getWords(tl.startRow, tl.startCol, tl.isAcross, word)));
-                System.out.println(new String(fullWord));
+                }*/
+                WordPlacement wp = board.getWordPlacement(tl.startRow, tl.startCol, tl.isAcross, word);
+                result.add(wp);
             }
-            System.out.println("TileLine ###: " + i);
+            //System.out.println("TileLine ###: " + i);
         }
         System.out.println("Number of TileLines:  " + lines.size());
-        System.out.println("Number of results :  " + result.size());
         return result;
     }
 
@@ -315,15 +314,14 @@ public class BoardAnagramUtils {
                             currentSquare--;
                             frequency[i]++;
                         } else if (isUseableBlank(i)) {
-                            for (int aLetter = 0; aLetter < LetterScores.alphabet.length; aLetter++) {
-                                if (Arrays.binarySearch(possibilities[currentSquare], LetterScores.alphabet[aLetter]) >= 0) {
-                                    currentWord[currentSquare] = LetterScores.alphabet[aLetter];
+                            for (int possibleLetter = 0; possibleLetter < possibilities[currentSquare].length;
+                            possibleLetter++) {
+                                    currentWord[currentSquare] = Character.toLowerCase(possibilities[currentSquare][possibleLetter]);
                                     frequency[i]--;
                                     currentSquare++;
                                     permute();
                                     currentSquare--;
                                     frequency[i]++;
-                                }
                             }
                         }
                     }

@@ -93,7 +93,7 @@ public class IntHashDictionary implements Dictionary {
             Range r = ranges.get(index);
             String stringWord = String.valueOf(word);
             for (int i = r.startIndex; i <= r.endIndex; i++) {
-                if(words.get(i).equals(stringWord)) return true;
+                if(words.get(i).equalsIgnoreCase(stringWord)) return true;
             }
             return false;
         }

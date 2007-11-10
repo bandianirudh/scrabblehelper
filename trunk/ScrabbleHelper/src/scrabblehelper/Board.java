@@ -22,7 +22,7 @@ public class Board {
     }
 
     public void initializeLetters() {
-        setLetters(new char[BoardLayout.stringBoardValues.length][]);
+        setLetters(new char[BoardLayout.charBoardValues.length][]);
         for (int row = 0; row < getLetters().length; row++) {
             getLetters()[row] = new char[BoardLayout.stringBoardValues[0].length()];
             Arrays.fill(getLetters()[row], LetterScores.EMPTY_SQUARE);
@@ -133,9 +133,61 @@ public class Board {
         }
         return result;
     }
-    
-    public int getScoreFromWord(int row, int col, char[] word) {
+
+    public WordPlacement getWordPlacement(int startRow, int startCol,
+            boolean isAcross, char[] word) {
+        List<SingleWordOnBoard> words = new ArrayList<SingleWordOnBoard>();
+        if (isAcross) {
+            //look for parallel words
+            for (int loc = 0; loc < word.length; loc++) {
+                int col = loc + startCol;
+                if (getValue(startRow, col) == LetterScores.EMPTY_SQUARE &&
+                        squareHasAdjascentVerticalLetter(startRow, loc)) {
+                    char[] letter = new char[1];
+                    letter[0] = word[loc];
+                    SingleWordOnBoard vWord = getVerticalSingleWordFromWordPlacement(startRow, col, letter);
+                    if (vWord.word.length > 1) {
+                        words.add(vWord);
+                    }
+                }
+            }
+            //look for words in series
+            SingleWordOnBoard horizWord = getHorizontalSingleWordFromWordPlacement(startRow, startCol, word);
+            if (horizWord.word.length > 1) {
+                words.add(horizWord);
+            }
+        } else {
+            for (int loc = 0; loc < word.length; loc++) {
+                int row = loc + startRow;
+                if (getValue(row, startCol) == LetterScores.EMPTY_SQUARE &&
+                        squareHasAdjascentHorizontalLetter(loc, startCol)) {
+                    char[] letter = new char[1];
+                    letter[0] = word[loc];
+                    SingleWordOnBoard hWord = getHorizontalSingleWordFromWordPlacement(row, startCol, letter);
+                    if (hWord.word.length > 1) {
+                        words.add(hWord);
+                    }
+                }
+            }
+            //look for words in series
+            SingleWordOnBoard vertWord = getVerticalSingleWordFromWordPlacement(startRow, startCol, word);
+            if (vertWord.word.length > 1) {
+                words.add(vertWord);
+            }
+        }
         
+        int score = 0;
+        for (SingleWordOnBoard swop: words) {
+            score += BoardLayout.getWordScore(swop);
+        }
+        
+        
+        return new WordPlacement(new TileLine(startRow, startCol, word.length, isAcross),
+                words, score);
+    }
+
+    public int getScoreFromWord(int row, int col, char[] word) {
+
         return 0;
     }
 
@@ -200,11 +252,11 @@ public class Board {
 
         char[] result = getCharLine(topRow + 1, col,
                 bottomRow - topRow - 1, false);
-        
+
         for (int i = 0; i < letters.length; i++) {
             result[startRow - topRow + i - 1] = letters[i];
         }
-        
+
         return result;
     }
 
@@ -220,12 +272,67 @@ public class Board {
 
         char[] result = getCharLine(row, leftCol + 1,
                 rightCol - leftCol - 1, true);
-        
+
         for (int i = 0; i < letters.length; i++) {
             result[startCol - leftCol + i - 1] = letters[i];
         }
-        
+
         return result;
+    }
+
+    public SingleWordOnBoard getVerticalSingleWordFromWordPlacement(int startRow, int col, char[] letters) {
+        int topRow = startRow;
+        int bottomRow = startRow + letters.length - 1;
+
+        while (LetterScores.isValidLetter(getValue(--topRow, col))) {
+        }
+
+        while (LetterScores.isValidLetter(getValue(++bottomRow, col))) {
+        }
+
+        char[] result = getCharLine(topRow + 1, col,
+                bottomRow - topRow - 1, false);
+
+        boolean[] occupied = new boolean[result.length];
+        for (int i = 0; i < result.length; i++) {
+            occupied[i] = LetterScores.isValidLetter(this.letters[topRow + i + 1][col]);
+        }
+
+        for (int i = 0; i < letters.length; i++) {
+            result[startRow - topRow + i - 1] = letters[i];
+        }
+
+        return new SingleWordOnBoard(topRow + 1, col, result, false, occupied);
+    }
+
+    public SingleWordOnBoard getHorizontalSingleWordFromWordPlacement(int row, int startCol, char[] letters) {
+        int leftCol = startCol;
+        int rightCol = startCol + letters.length - 1;
+
+        while (LetterScores.isValidLetter(getValue(row, --leftCol))) {
+        }
+
+        while (LetterScores.isValidLetter(getValue(row, ++rightCol))) {
+        }
+
+        char[] result = getCharLine(row, leftCol + 1,
+                rightCol - leftCol - 1, true);
+
+        for (int i = 0; i < letters.length; i++) {
+            result[startCol - leftCol + i - 1] = letters[i];
+        }
+
+        boolean[] occupied = new boolean[result.length];
+        for (int i = 0; i < result.length; i++) {
+            occupied[i] = 
+                    LetterScores.isValidLetter(this.letters[row][leftCol + i + 1]);
+        }
+
+        for (int i = 0; i < letters.length; i++) {
+            result[startCol - leftCol + i - 1] = letters[i];
+        }
+
+        return new SingleWordOnBoard(row, leftCol + 1, result, false, occupied);
     }
 
     public Dimension getBoardSize() {

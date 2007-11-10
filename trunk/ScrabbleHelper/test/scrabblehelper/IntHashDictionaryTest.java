@@ -48,7 +48,7 @@ public class IntHashDictionaryTest extends TestCase {
             instance.isWord("SCLEROSIS".toCharArray());
         }
         
-        if (!instance.isWord("SCLEROSIS".toCharArray())) fail();
+        if (!instance.isWord("ScLEROSIS".toCharArray())) fail();
     }
     
     public void testIsWordFalse() {
