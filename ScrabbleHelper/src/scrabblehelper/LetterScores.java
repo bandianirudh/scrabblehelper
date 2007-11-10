@@ -22,6 +22,8 @@ public class LetterScores {
             'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
             's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+    public static char[] lowerCaseLetters = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
+    'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
     public static char EMPTY_SQUARE = Character.MIN_VALUE;
     public static char OUT_OF_BOUNDS = ' ';
     public static char UNUSED_BLANK = '0';
@@ -43,7 +45,7 @@ public class LetterScores {
     }
 
     public static int getIntFromChar(char c) {
-        return Arrays.binarySearch(alphabet, Character.toUpperCase(c));
+        return Arrays.binarySearch(allLetters, Character.toUpperCase(c)) % 26;
     }
 
     public static int getIntFromCharGuaranteedUppercase(char upperCaseCharacter) {
@@ -54,5 +56,11 @@ public class LetterScores {
         return scores[getIntFromChar(c)];
     }
 
-
+    public static int getBoardIndependentWordScore(char[] word) {
+        int score = 0;
+        for (char c: word) {
+            score += getLetterScore(c);
+        }
+        return score;
+    }
 }

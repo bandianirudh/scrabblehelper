@@ -23,7 +23,7 @@ public class Word implements Comparable {
     }
     
     public int getScore() {
-        return LetterScores.getWordScore(word.toCharArray());
+        return LetterScores.getBoardIndependentWordScore(word.toCharArray());
     }
 
     public int compareTo(Object o) {

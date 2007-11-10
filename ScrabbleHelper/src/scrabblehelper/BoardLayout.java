@@ -20,8 +20,9 @@ public class BoardLayout {
     public static final char TRIPLE_LETTER = '3';
     public static final char DOUBLE_WORD = '4';
     public static final char TRIPLE_WORD = '5';
-    public static char[][] charBoardValues = getCharBoardValues();
-    public static final String[] stringBoardValues = {"500200050002005",
+    public static char[][] charBoardValues;
+    public static final String[] stringBoardValues = {
+            "500200050002005",
             "040003000300040",
             "004000202000400",
             "200400020004002",
@@ -36,9 +37,16 @@ public class BoardLayout {
             "004000202000400",
             "040003000300040",
             "500200050002005"};
+    static {
+        charBoardValues = generateCharBoardValues();
+    }
 
     /** Creates a new instance of Board */
     public BoardLayout() {
+    }
+
+    public static int getWordScore(SingleWordOnBoard word) {
+        return getWordScore(word.startRow, word.startCol, word.word, word.occupiedTiles, word.isAcross);
     }
 
     public static int getWordScore(int startRow, int startCol, char[] word, boolean[] occupiedTiles, boolean isAcross) {
@@ -81,10 +89,10 @@ public class BoardLayout {
             char modifier = charBoardValues[row][col];
             if (!occupiedTiles[i]) {
                 switch (modifier) {
-                    case DOUBLE_LETTER:
+                    case DOUBLE_WORD:
                         score *= 2;
                         break;
-                    case TRIPLE_LETTER:
+                    case TRIPLE_WORD:
                         score *= 3;
                         break;
                 }
@@ -104,7 +112,7 @@ public class BoardLayout {
         return score;
     }
 
-    private static char[][] getCharBoardValues() {
+    private static char[][] generateCharBoardValues() {
         char[][] result = new char[stringBoardValues.length][];
         for (int row = 0; row <
                 stringBoardValues.length; row++) {
