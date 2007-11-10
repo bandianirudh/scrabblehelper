@@ -15,7 +15,6 @@ import junit.framework.TestCase;
  */
 public class BoardAnagramUtilsTest extends TestCase {
 
-    
     public static IntHashDictionary ihd;
     static {
         ihd = new IntHashDictionary();
@@ -56,23 +55,26 @@ public class BoardAnagramUtilsTest extends TestCase {
     }*/
     public void testFindAllBoardPossibilities() {
         System.out.println("findAllBoardPossibilities");
-        BoardAnagramUtils instance = new BoardAnagramUtils(BoardFactory.getSampleBoard());
+        BoardAnagramUtils instance = new BoardAnagramUtils(BoardFactory.getRealBoard());
         instance.setDictionary(ihd);
-        System.out.println(BoardFactory.getSampleBoard().getBoardDisplay());
+        System.out.println(BoardFactory.getRealBoard().getBoardDisplay());
         Arrays.sort(LetterScores.allLetters);
         Rack r = new Rack();
-        StringBuffer sb = new StringBuffer("SELOND");
-        sb.append(LetterScores.UNUSED_BLANK);
+        StringBuffer sb = new StringBuffer("OEENL");
+        //sb.append(LetterScores.UNUSED_BLANK);
         r.letters = sb.toString().toCharArray();
         instance.setRack(r);
         List<WordPlacement> result = instance.findAllBoardPossibilities();
         Collections.sort(result);
         for (WordPlacement wp : result) {
-            System.out.println(wp.toString() + "\n");
-            System.out.println(wp.line.toString());
+            if (wp.score > 12) {
+                System.out.println(wp.toString() + "\n");
+                System.out.println(wp.line.toString());
+            }
         }
         System.out.println("Results:  " + result.size());
     }
+
     public void testPermuter() {
         System.out.println("findAllBoardPossibilities");
         BoardAnagramUtils instance = new BoardAnagramUtils(BoardFactory.getSampleBoard());

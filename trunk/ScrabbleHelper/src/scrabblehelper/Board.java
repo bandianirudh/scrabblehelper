@@ -332,7 +332,7 @@ public class Board {
             result[startCol - leftCol + i - 1] = letters[i];
         }
 
-        return new SingleWordOnBoard(row, leftCol + 1, result, false, occupied);
+        return new SingleWordOnBoard(row, leftCol + 1, result, true, occupied);
     }
 
     public Dimension getBoardSize() {
