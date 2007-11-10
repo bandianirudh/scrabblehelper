@@ -2,8 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package scrabblehelper;
+package scrabbletools;
 
+import scrabbletools.Board;
+import scrabbletools.BoardFactory;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;

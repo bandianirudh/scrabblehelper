@@ -2,11 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package scrabblehelper;
+package scrabbletools;
 
+import scrabbletools.Board;
+import scrabbletools.IntHashDictionary;
+import scrabbletools.TileLineFactory;
+import scrabbletools.TileLine;
+import scrabbletools.BoardFactory;
 import java.util.ArrayList;
 import junit.framework.TestCase;
-import scrabblehelper.BoardAnagramUtils.Square;
+import scrabbletools.BoardAnagramUtils.Square;
 
 /**
  *

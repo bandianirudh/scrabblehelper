@@ -1,4 +1,4 @@
-package scrabblehelper;
+package scrabbletools;
 
 public class TileLine {
 

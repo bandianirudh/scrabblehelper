@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 
-package scrabblehelper;
+package scrabbletools;
 
 import java.io.BufferedReader;
 import java.io.File;

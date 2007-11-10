@@ -5,8 +5,12 @@
  * Created on September 12, 2007, 6:02 PM
  */
 
-package scrabblehelper;
+package scrabbletools;
 
+import scrabbletools.BruteAnagram;
+import scrabbletools.IntHashDictionary;
+import scrabbletools.IndexDictionary;
+import scrabbletools.Word;
 import java.util.ArrayList;
 import junit.framework.*;
 import java.util.List;

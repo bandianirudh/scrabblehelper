@@ -5,8 +5,9 @@
  * Created on September 11, 2007, 11:27 PM
  */
 
-package scrabblehelper;
+package scrabbletools;
 
+import scrabbletools.IndexDictionary;
 import junit.framework.*;
 import java.io.BufferedReader;
 import java.io.File;
