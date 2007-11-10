@@ -112,8 +112,10 @@ public class BoardAnagramUtils {
         generatePossibilities();
 
         ArrayList<TileLine> lines = t.generateTileLines(processedBoard);
+        System.out.println("Number of lines to calculate:  " + lines.size());
 
         for (int i = 0; i < lines.size(); i++) {
+            System.out.println("Line # " + (i + 1) + " / " + lines.size());
             TileLine tl = lines.get(i);
             permuter.set(getOccupiedLetters(tl), getLetterPossibilitiesInLine(tl), tl);
             List<char[]> resultWords = permuter.findValidWords();
