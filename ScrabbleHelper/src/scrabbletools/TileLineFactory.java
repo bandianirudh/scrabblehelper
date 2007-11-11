@@ -9,6 +9,7 @@
 package scrabbletools;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import scrabbletools.BoardAnagramUtils.Square;
 
 /**
@@ -16,12 +17,14 @@ import scrabbletools.BoardAnagramUtils.Square;
  * @author Nick
  */
 public class TileLineFactory {
-
+    char[] sortedRack;
     Board board;
     /** Creates a new instance of TileLineFactory */
 
-    public TileLineFactory(Board board) {
+    public TileLineFactory(Board board, char[] rack) {
         this.board = board;
+        Arrays.sort(rack);
+        this.sortedRack = rack;
     }
 
     public ArrayList<TileLine> generateTileLines(Square[][] processedBoard) {
