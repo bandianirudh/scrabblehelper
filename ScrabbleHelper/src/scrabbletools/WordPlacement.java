@@ -4,9 +4,9 @@ import java.util.List;
 
 public class WordPlacement implements Comparable {
 
-    int score;
-    List<SingleWordOnBoard> words;
-    TileLine line;
+    private int score;
+    private List<SingleWordOnBoard> words;
+    private TileLine line;
 
     public WordPlacement(TileLine line, List<SingleWordOnBoard> words, int score) {
         this.line = line;
@@ -16,12 +16,12 @@ public class WordPlacement implements Comparable {
 
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < words.size(); i++) {
+        for (int i = 0; i < getWords().size(); i++) {
             sb.append((i + 1) + ":  ");
-            sb.append(words.get(i).word);
+            sb.append(getWords().get(i).word);
             sb.append("\n");
         }
-        sb.append("\tScore:  " + score);
+        sb.append("\tScore:  " + getScore());
         return sb.toString();
     }
 
@@ -31,13 +31,39 @@ public class WordPlacement implements Comparable {
             return -1;
         }
         WordPlacement other = (WordPlacement)o;
-        int otherScore = other.score;
-        if (score < otherScore) {
+        int otherScore = other.getScore();
+        if (getScore() < otherScore) {
             return -1;            
-        } else if (score > otherScore) {
+        } else if (getScore() > otherScore) {
             return 1;
         } else {
             return 0;
         }
+    }
+
+    public TileLine getLine() {
+        return line;
+    }
+
+    public void setLine(TileLine line) {
+        this.line = line;
+    }
+
+    public
+
+    int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public List<SingleWordOnBoard> getWords() {
+        return words;
+    }
+
+    public void setWords(List<SingleWordOnBoard> words) {
+        this.words = words;
     }
 }
