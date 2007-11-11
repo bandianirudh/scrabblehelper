@@ -8,6 +8,8 @@
  */
 package scrabbletools;
 
+import java.awt.Color;
+
 /**
  *
  * @author Nick
@@ -20,9 +22,9 @@ public class BoardLayout {
     public static final char TRIPLE_LETTER = '3';
     public static final char DOUBLE_WORD = '4';
     public static final char TRIPLE_WORD = '5';
+    public static final Color BEIGE = new Color(250, 250, 10, 100);
     public static char[][] charBoardValues;
-    public static final String[] stringBoardValues = {
-            "500200050002005",
+    public static final String[] stringBoardValues = {"500200050002005",
             "040003000300040",
             "004000202000400",
             "200400020004002",
@@ -43,6 +45,22 @@ public class BoardLayout {
 
     /** Creates a new instance of Board */
     public BoardLayout() {
+    }
+
+    public static Color getColorFromTileType(char tileType) {
+        switch (tileType) {
+            case SINGLE_LETTER:
+                return BEIGE;
+            case DOUBLE_LETTER:
+                return Color.CYAN;
+            case TRIPLE_LETTER:
+                return Color.BLUE;
+            case DOUBLE_WORD:
+                return Color.PINK;
+            case TRIPLE_WORD:
+                return Color.RED;
+        }
+        return Color.BLACK;
     }
 
     public static int getWordScore(SingleWordOnBoard word) {
