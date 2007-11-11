@@ -37,7 +37,7 @@ public class Startup {
                 dictNames.add(DICTIONARIES_FOLDER + "/" + temp);
             }
             
-            IntHashDictionary d = new IntHashDictionary(dictNames.get(0));
+            IntHashDictionary d = new IntHashDictionary(dictNames.get(1));
             StaticFields.setDictionary(d);
         } catch (IOException ex) {
             Logger.getLogger(Startup.class.getName()).log(Level.SEVERE, null, ex);

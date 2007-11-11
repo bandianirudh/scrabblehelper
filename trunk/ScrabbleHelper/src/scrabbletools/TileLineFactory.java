@@ -47,7 +47,8 @@ public class TileLineFactory {
                 int playedTiles = 1;
                 boolean isConnected = false;
                 endColSearch:
-                for (int endCol = startCol; endCol < processedBoard[row].length && playedTiles <= 7; endCol++) {
+                for (int endCol = startCol; endCol < processedBoard[row].length &&
+                        playedTiles <= 7; endCol++) {
                     Square s = processedBoard[row][endCol];
                     if (s.isOccupied()) {
                         isConnected = true;
@@ -89,7 +90,7 @@ public class TileLineFactory {
                 boolean isConnected = false;
                 endRowSearch:
                 for (int endRow = startRow; endRow < processedBoard.length && playedTiles <= 7; endRow++) {
-                    Square s = processedBoard[startRow][col];
+                    Square s = processedBoard[endRow][col];
                     if (s.isOccupied()) {
                         isConnected = true;
                         continue;
