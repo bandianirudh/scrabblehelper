@@ -34,23 +34,27 @@ import scrabbletools.LetterScores;
  * @author Nick
  */
 public class VisibleTile extends JPanel implements MouseListener {
+
     ScrabbleBoardPanel parent;
-    
     JLabel letterLabel;
     char tileType;
     char letter;
+    int col;
+    int row;
+    ScrabbleBoardPanel panel;
+    
 
-    public VisibleTile(char tileType, char letter) {
+    public VisibleTile(ScrabbleBoardPanel parent, char tileType, int row, int col) {
         super();
 
         addMouseListener(this);
 
+        this.panel = parent;
         this.tileType = tileType;
-        this.letter = letter;
-        /*
-        GridLayout gl = new GridLayout(1, 1, 0, 0);
-        setLayout(gl);*/
-        
+        this.col = col;
+        this.row = row;
+        this.letter = LetterScores.EMPTY_SQUARE;
+
         BorderLayout bl = new BorderLayout();
         setLayout(bl);
 
@@ -78,6 +82,7 @@ public class VisibleTile extends JPanel implements MouseListener {
     }
 
     public void edit() {
+        final ScrabbleBoardPanel sbp = panel;
         final JTextField editor = new JTextField(Character.toString(getLetter()), 1);
         editor.setDocument(new PlainDocument() {
 
@@ -89,22 +94,13 @@ public class VisibleTile extends JPanel implements MouseListener {
                                 editor.setSelectionStart(0);
                                 editor.setSelectionEnd(1);
                             }
+                            if (str.charAt(0) != getLetter()) {
+                                panel.letterEnterred(VisibleTile.this, editor);
+                            }
                         }
                     }
                 });
-        editor.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "DOWN");
-        editor.getActionMap().put("DOWN", new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
-        
-        registerKeyboardAction(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("WORKED");
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), WHEN_FOCUSED);
+        registerKeys(editor);
         editor.setFont(Font.decode("Arial 22"));
         editor.setText(Character.toString(getLetter()));
         if (editor.getText().length() > 0) {
@@ -139,11 +135,59 @@ public class VisibleTile extends JPanel implements MouseListener {
         getParent().repaint(r.x, r.y, r.width, r.height);
     }
 
+    public void registerKeys(JTextField editor) {
+        final ScrabbleBoardPanel sbp = panel;
+        editor.getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0),
+                "UP");
+        editor.getActionMap().put("UP", new AbstractAction() {
+
+                    public void actionPerformed(ActionEvent e) {
+                        sbp.moveFocus(VisibleTile.this,
+                                ScrabbleBoardPanel.Direction.UP);
+                    }
+                });
+
+        editor.getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0),
+                "DOWN");
+        editor.getActionMap().put("DOWN", new AbstractAction() {
+
+                    public void actionPerformed(ActionEvent e) {
+                        sbp.moveFocus(VisibleTile.this,
+                                ScrabbleBoardPanel.Direction.DOWN);
+                    }
+                });
+
+
+        editor.getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0),
+                "LEFT");
+        editor.getActionMap().put("LEFT", new AbstractAction() {
+
+                    public void actionPerformed(ActionEvent e) {
+                        sbp.moveFocus(VisibleTile.this,
+                                ScrabbleBoardPanel.Direction.LEFT);
+                    }
+                });
+
+        editor.getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0),
+                "RIGHT");
+        editor.getActionMap().put("RIGHT", new AbstractAction() {
+
+                    public void actionPerformed(ActionEvent e) {
+                        sbp.moveFocus(VisibleTile.this,
+                                ScrabbleBoardPanel.Direction.RIGHT);
+                    }
+                });
+    }
+
     public void stopEditing(JTextField editor) {
         if (editor != null) {
             if (editor.getText().length() > 0) {
                 char l = editor.getText().toUpperCase().charAt(0);
                 setLetter(l);
+                panel.letterSaved(this);
+                for (FocusListener fl : editor.getFocusListeners()) {
+                    editor.removeFocusListener(fl);
+                }
             } else {
                 setLetter(LetterScores.EMPTY_SQUARE);
             }

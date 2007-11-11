@@ -6,17 +6,9 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.FocusTraversalPolicy;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeListener;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.KeyStroke;
+import javax.swing.JTextField;
 import scrabbletools.BoardLayout;
 import scrabbletools.LetterScores;
 
@@ -28,6 +20,21 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
 
     public static final int ROWS = 15;
     public static final int COLS = 15;
+    VisibleTile[][] tiles;
+    private boolean moveAcross = true;
+
+    public boolean isMoveAcross() {
+        return moveAcross;
+    }
+
+    public void setMoveAcross(boolean moveAcross) {
+        this.moveAcross = moveAcross;
+    }
+
+    public enum Direction {
+
+        LEFT, RIGHT, UP, DOWN
+    }
     /** Creates new form ScrabbleBoardPanel */
 
     public ScrabbleBoardPanel() {
@@ -39,17 +46,8 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
         gl.setHgap(0);
         setLayout(gl);
         initializeTiles();
-        getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("VK_WINDOWS"),
-                "INDICATEWORKED");
-        getActionMap().put("INDICATEWORKED", new AbstractAction() {
-
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
-        
     }
-    
+
     public void paint(Graphics g) {
         super.paint(g);
         int rowMult = getHeight() / ROWS;
@@ -76,14 +74,79 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
         for (int row = 0; row < ((GridLayout) getLayout()).getRows(); row++) {
             tiles[row] = new VisibleTile[((GridLayout) getLayout()).getColumns()];
             for (int col = 0; col < ((GridLayout) getLayout()).getColumns(); col++) {
-                tiles[row][col] = new VisibleTile(BoardLayout.charBoardValues[row][col],
-                        LetterScores.EMPTY_SQUARE);
+                tiles[row][col] = new VisibleTile(this,
+                        BoardLayout.charBoardValues[row][col],
+                        row, col);
                 add(tiles[row][col]);
                 tiles[row][col].letter = LetterScores.EMPTY_SQUARE;
             }
         }
+        this.tiles = tiles;
     }
 
+    public void letterSaved(VisibleTile tile) {
+
+    }
+
+    public void letterEnterred(VisibleTile tile, JTextField editor) {
+        if (isMoveAcross()) {
+            moveFocus(tile, Direction.RIGHT);
+        } else {
+            moveFocus(tile, Direction.DOWN);
+        }
+    }
+
+    public void moveFocus(VisibleTile tile, Direction d) {
+        int row = tile.row;
+        int col = tile.col;
+
+        if (d == Direction.DOWN) {
+            if (row < (ROWS - 1)) {
+                row++;
+            } else {
+                tile.stopEditing(null);
+                return;
+            }
+            setMoveAcross(false);
+        } else if (d == Direction.UP) {
+            if (row > 0) {
+                row--;
+            } else {
+                tile.stopEditing(null);
+                return;
+            }
+            setMoveAcross(false);
+        } else if (d == Direction.LEFT) {
+            if (col > 0) {
+                col--;
+            } else {
+                tile.stopEditing(null);
+                return;
+            }
+            setMoveAcross(true);
+        } else if (d == Direction.RIGHT) {
+            if (col < (COLS - 1)) {
+                col++;
+            } else {
+                tile.stopEditing(null);
+                return;
+            }
+            setMoveAcross(true);
+        }
+        tile.stopEditing(null);
+        tiles[row][col].edit();
+    }
+
+    public char[][] getCharArray() {
+        char[][] result = new char[tiles.length][tiles[0].length];
+        for (int row = 0; row < tiles.length; row++) {
+            for (int col = 0; col < tiles[0].length; col++) {
+                result[row][col] = tiles[row][col].getLetter();
+            }
+        }
+        return result;
+    }
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
