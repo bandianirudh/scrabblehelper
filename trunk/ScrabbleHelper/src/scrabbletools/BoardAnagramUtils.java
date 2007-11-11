@@ -16,18 +16,20 @@ import java.util.List;
 public class BoardAnagramUtils {
 
     Square[][] processedBoard;
-    Board board;
+    private Board board;
     private Rack rack = new Rack();
-    private IntHashDictionary dictionary;
+    private Dictionary dictionary;
     private static final char[] EMPTY_CHAR_ARRAY = new char[0];
 
     public BoardAnagramUtils(Board board) {
         this.board = board;
-        initalizeProcessedBoard();
     }
 
     public void initalizeProcessedBoard() {
-        Dimension d = board.getBoardSize();
+        if (getBoard() == null) {
+            return;
+        }
+        Dimension d = getBoard().getBoardSize();
         processedBoard = new Square[d.height][];
 
         for (int a = 0; a < processedBoard.length; a++) {
@@ -39,18 +41,21 @@ public class BoardAnagramUtils {
     }
 
     public void generatePossibilities() {
+        if (getBoard() == null) {
+            return;
+        }
         initalizeProcessedBoard();
-        char[][] letters = board.getLetters();
+        char[][] letters = getBoard().getLetters();
         boolean hasBlank = Arrays.binarySearch(rack.letters, LetterScores.UNUSED_BLANK) >= 0;
         for (int row = 0; row < letters.length; row++) {
             for (int col = 0; col < letters[0].length; col++) {
                 boolean adjascentHorizontal = false;
                 boolean adjascentVertical = false;
                 Square s = processedBoard[row][col];
-                char squareLetter = board.getValue(row, col);
+                char squareLetter = getBoard().getValue(row, col);
 
-                adjascentHorizontal = board.squareHasAdjascentHorizontalLetter(row, col);
-                adjascentVertical = board.squareHasAdjascentVerticalLetter(row, col);
+                adjascentHorizontal = getBoard().squareHasAdjascentHorizontalLetter(row, col);
+                adjascentVertical = getBoard().squareHasAdjascentVerticalLetter(row, col);
                 if (squareLetter == LetterScores.EMPTY_SQUARE && //if it's empty and it either has a horizontal or vertical neighbor
                         (adjascentHorizontal || adjascentVertical)) {
                     StringBuffer vertLetters = new StringBuffer(10);
@@ -72,11 +77,11 @@ public class BoardAnagramUtils {
                         }
 
                         if (adjascentHorizontal &&
-                                getDictionary().isWord(board.getHorizontalWordFromSquare(row, col, letter))) {
+                                getDictionary().isWord(getBoard().getHorizontalWordFromSquare(row, col, letter))) {
                             horizLetters.append(letter);
                         }
                         if (adjascentVertical &&
-                                getDictionary().isWord(board.getVerticalWordFromSquare(row, col, letter))) {
+                                getDictionary().isWord(getBoard().getVerticalWordFromSquare(row, col, letter))) {
                             vertLetters.append(letter);
                         }
                     }
@@ -92,22 +97,26 @@ public class BoardAnagramUtils {
         }
     }
 
-    public IntHashDictionary getDictionary() {
+    public Dictionary getDictionary() {
         return dictionary;
     }
 
-    public void setDictionary(IntHashDictionary dictionary) {
+    public void setDictionary(Dictionary dictionary) {
         this.dictionary = dictionary;
     }
 
     public List<WordPlacement> findAllBoardPossibilities() {
+        if (getBoard() == null) {
+            return null;
+        }
+        
         ArrayList<WordPlacement> result = new ArrayList<WordPlacement>(100);
 
         char[] sortedRack = rack.letters.clone();
         Arrays.sort(sortedRack);
 
         AnagramPermuter permuter = new AnagramPermuter(sortedRack);
-        TileLineFactory t = new TileLineFactory(board);
+        TileLineFactory t = new TileLineFactory(getBoard());
 
         generatePossibilities();
 
@@ -115,7 +124,7 @@ public class BoardAnagramUtils {
         System.out.println("Number of lines to calculate:  " + lines.size());
 
         for (int i = 0; i < lines.size(); i++) {
-            System.out.println("Line # " + (i + 1) + " / " + lines.size());
+            //System.out.println("Line # " + (i + 1) + " / " + lines.size());
             TileLine tl = lines.get(i);
             permuter.set(getOccupiedLetters(tl), getLetterPossibilitiesInLine(tl), tl);
             List<char[]> resultWords = permuter.findValidWords();
@@ -126,7 +135,7 @@ public class BoardAnagramUtils {
                 } else {
                     fullWord = board.getVerticalWordFromWordPlacement(tl.startRow, tl.startCol, word);
                 }*/
-                WordPlacement wp = board.getWordPlacement(tl.startRow, tl.startCol, tl.isAcross, word);
+                WordPlacement wp = getBoard().getWordPlacement(tl.startRow, tl.startCol, tl.isAcross, word);
                 result.add(wp);
             }
             //System.out.println("TileLine ###: " + i);
@@ -137,6 +146,10 @@ public class BoardAnagramUtils {
 
     public char[][] getLetterPossibilitiesInLine(int startRow, int startCol, int length, boolean isAcross) {
         return getLetterPossibilitiesInLine(new TileLine(startRow, startCol, length, isAcross));
+    }
+    
+    public void setLetters(char[] letters) {
+        rack.letters = letters;
     }
 
     public char[][] getLetterPossibilitiesInLine(TileLine line) {
@@ -206,6 +219,10 @@ public class BoardAnagramUtils {
         this.rack = rack;
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
     public class Square {
 
         boolean verticalAdjascent = false;
@@ -267,7 +284,7 @@ public class BoardAnagramUtils {
 
         private void permute() {
             if (currentSquare == tileLine.length) { //do your thing if it's the last square
-                List<char[]> possibleWords = board.getWords(tileLine.startRow,
+                List<char[]> possibleWords = getBoard().getWords(tileLine.startRow,
                         tileLine.startCol, tileLine.isAcross, currentWord);
 
                 //tester:  board.getWords(1, 0, true, "ODE".toCharArray())

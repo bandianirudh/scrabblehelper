@@ -21,8 +21,8 @@ public class AnagramWindow extends javax.swing.JFrame {
     /** Creates new form AnagramWindow */
     public AnagramWindow() {
         super("Anagrammer");
-        initComponents();
         anagram = new BruteAnagram(StaticFields.getDictionary());
+        initComponents();
     }
     
     /** This method is called from within the constructor to

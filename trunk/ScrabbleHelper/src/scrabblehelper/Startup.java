@@ -5,7 +5,7 @@
 
 package scrabblehelper;
 
-import gui.AnagramWindow;
+import gui.ScrabbleWindow;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,7 +24,7 @@ public class Startup {
     
     public static void startUp() {
         loadResources();
-        new AnagramWindow().setVisible(true);
+        new ScrabbleWindow().setVisible(true);
     }
     
     public static void loadResources() {

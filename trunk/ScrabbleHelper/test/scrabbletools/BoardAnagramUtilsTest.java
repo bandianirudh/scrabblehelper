@@ -73,9 +73,9 @@ public class BoardAnagramUtilsTest extends TestCase {
         List<WordPlacement> result = instance.findAllBoardPossibilities();
         Collections.sort(result);
         for (WordPlacement wp : result) {
-            if (wp.score > 12) {
+            if (wp.getScore() > 12) {
                 System.out.println(wp.toString() + "\n");
-                System.out.println(wp.line.toString());
+                System.out.println(wp.getLine().toString());
             }
         }
         System.out.println("Results:  " + result.size());
