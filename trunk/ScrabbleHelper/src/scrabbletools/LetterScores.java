@@ -24,8 +24,8 @@ public class LetterScores {
             's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
     public static char[] lowerCaseLetters = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
     'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
-    public static char EMPTY_SQUARE = Character.MIN_VALUE;
-    public static char OUT_OF_BOUNDS = ' ';
+    public static char EMPTY_SQUARE = ' ';
+    public static char OUT_OF_BOUNDS = Character.MIN_VALUE;
     public static char UNUSED_BLANK = '0';
     static {
         Arrays.sort(allLetters);
