@@ -101,37 +101,54 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
         int col = tile.col;
 
         if (d == Direction.DOWN) {
-            if (row < (ROWS - 1)) {
-                row++;
+            if (!moveAcross) {
+                if (row < (ROWS - 1)) {
+                    row++;
+                } else {
+                    tile.stopEditing(null);
+                    return;
+                }
             } else {
-                tile.stopEditing(null);
+                setMoveAcross(false);
                 return;
             }
-            setMoveAcross(false);
         } else if (d == Direction.UP) {
-            if (row > 0) {
-                row--;
+            if (!moveAcross) {
+                if (row > 0) {
+                    row--;
+                } else {
+                    tile.stopEditing(null);
+                    return;
+                }
             } else {
-                tile.stopEditing(null);
+                setMoveAcross(false);
                 return;
             }
-            setMoveAcross(false);
+
         } else if (d == Direction.LEFT) {
-            if (col > 0) {
-                col--;
+            if (moveAcross) {
+                if (col > 0) {
+                    col--;
+                } else {
+                    tile.stopEditing(null);
+                    return;
+                }
             } else {
-                tile.stopEditing(null);
+                setMoveAcross(true);
                 return;
             }
-            setMoveAcross(true);
         } else if (d == Direction.RIGHT) {
-            if (col < (COLS - 1)) {
-                col++;
+            if (moveAcross) {
+                if (col < (COLS - 1)) {
+                    col++;
+                } else {
+                    tile.stopEditing(null);
+                    return;
+                }
             } else {
-                tile.stopEditing(null);
+                setMoveAcross(true);
                 return;
             }
-            setMoveAcross(true);
         }
         tile.stopEditing(null);
         tiles[row][col].edit();
@@ -146,7 +163,7 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
         }
         return result;
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is

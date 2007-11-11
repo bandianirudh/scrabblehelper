@@ -22,6 +22,7 @@ public class ScrabbleWindow extends javax.swing.JFrame {
     
     /** Creates new form ScrabbleWindow */
     public ScrabbleWindow() {
+        super("Scrabble Solver");
         initComponents();
         utils.setDictionary(StaticFields.getDictionary());
     }

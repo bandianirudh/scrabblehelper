@@ -116,7 +116,7 @@ public class BoardAnagramUtils {
         Arrays.sort(sortedRack);
 
         AnagramPermuter permuter = new AnagramPermuter(sortedRack);
-        TileLineFactory t = new TileLineFactory(getBoard());
+        TileLineFactory t = new TileLineFactory(getBoard(), sortedRack.clone());
 
         generatePossibilities();
 
@@ -124,7 +124,6 @@ public class BoardAnagramUtils {
         System.out.println("Number of lines to calculate:  " + lines.size());
 
         for (int i = 0; i < lines.size(); i++) {
-            //System.out.println("Line # " + (i + 1) + " / " + lines.size());
             TileLine tl = lines.get(i);
             permuter.set(getOccupiedLetters(tl), getLetterPossibilitiesInLine(tl), tl);
             List<char[]> resultWords = permuter.findValidWords();
@@ -138,7 +137,6 @@ public class BoardAnagramUtils {
                 WordPlacement wp = getBoard().getWordPlacement(tl.startRow, tl.startCol, tl.isAcross, word);
                 result.add(wp);
             }
-            //System.out.println("TileLine ###: " + i);
         }
         System.out.println("Number of TileLines:  " + lines.size());
         return result;
