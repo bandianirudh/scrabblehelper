@@ -303,6 +303,7 @@ public class BoardAnagramUtils {
                         }
                     }
                 }
+                 
                 
                 for (char[] possibleWord : possibleWords) {
                     if (!dictionary.isWord(possibleWord)) {

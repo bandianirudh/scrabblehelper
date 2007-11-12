@@ -142,7 +142,7 @@ public class Board {
             for (int loc = 0; loc < word.length; loc++) {
                 int col = loc + startCol;
                 if (getValue(startRow, col) == LetterScores.EMPTY_SQUARE &&
-                        squareHasAdjascentVerticalLetter(startRow, loc)) {
+                        squareHasAdjascentVerticalLetter(startRow, col)) {
                     char[] letter = new char[1];
                     letter[0] = word[loc];
                     SingleWordOnBoard vWord = getVerticalSingleWordFromWordPlacement(startRow, col, letter);
@@ -160,7 +160,7 @@ public class Board {
             for (int loc = 0; loc < word.length; loc++) {
                 int row = loc + startRow;
                 if (getValue(row, startCol) == LetterScores.EMPTY_SQUARE &&
-                        squareHasAdjascentHorizontalLetter(loc, startCol)) {
+                        squareHasAdjascentHorizontalLetter(row, startCol)) {
                     char[] letter = new char[1];
                     letter[0] = word[loc];
                     SingleWordOnBoard hWord = getHorizontalSingleWordFromWordPlacement(row, startCol, letter);
@@ -183,6 +183,8 @@ public class Board {
         
         
         return new WordPlacement(new TileLine(startRow, startCol, word.length, isAcross),
+                getCharLine(startRow, startCol, word.length, isAcross),
+                word,
                 words, score);
     }
 

@@ -8,10 +8,13 @@
  */
 package scrabbletools;
 
+import gui.ErrorWindow;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,7 +41,7 @@ public class IntHashDictionary implements Dictionary {
         read(resource);
         generateIntHashes();
     }
-    
+
     public IntHashDictionary(URL url) {
         read(url);
         generateIntHashes();
@@ -48,19 +51,21 @@ public class IntHashDictionary implements Dictionary {
         URL url = ClassLoader.getSystemClassLoader().getResource(resource);
         read(url);
     }
-    
+
     public void read(URL url) {
         words = new ArrayList<String>(200000);
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader((InputStream) url.getContent()));
             String word;
             int i = 0;
             while ((word = reader.readLine()) != null) {
                 words.add(word);
                 i++;
             }
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (Exception ex) {
+            StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            new ErrorWindow(sw.toString());
         }
         Collections.sort(words);
         System.out.println("Number of words in intHash dictionary: " + words.size());

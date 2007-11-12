@@ -5,23 +5,46 @@ import java.util.List;
 public class WordPlacement implements Comparable {
 
     private int score;
+    private char[] placedLetters;
+    private char[] occupied;
     private List<SingleWordOnBoard> words;
     private TileLine line;
 
-    public WordPlacement(TileLine line, List<SingleWordOnBoard> words, int score) {
+    public WordPlacement(TileLine line, char[] occupied, char[] placedLetters, List<SingleWordOnBoard> words, int score) {
         this.line = line;
         this.words = words;
         this.score = score;
+        this.placedLetters = placedLetters;
+        this.occupied = occupied;
+    }
+    
+    public char[] generateDisplayedPlacedLetters() {
+        char[] result = new char[placedLetters.length];
+        for (int i = 0; i < placedLetters.length; i++) {
+            if (LetterScores.isValidLetter(occupied[i])) {
+                result[i] = '_';
+            } else {
+                result[i] = placedLetters[i];
+            }
+        }
+        return result;
     }
 
     public String toString() {
         StringBuffer sb = new StringBuffer();
+        sb.append("Letters Placed:  ");
+        sb.append(generateDisplayedPlacedLetters());
+        sb.append("\n");
+        sb.append(line.toString());
+        sb.append("\n\nResulting words:\n");
         for (int i = 0; i < getWords().size(); i++) {
-            sb.append((i + 1) + ":  ");
+            sb.append("      " + (i + 1) + ":  ");
             sb.append(getWords().get(i).word);
             sb.append("\n");
         }
-        sb.append("\tScore:  " + getScore());
+        sb.append("\nTotal score:  " + getScore());
+        sb.append("\n.............................................................." +
+                "............................................");
         return sb.toString();
     }
 
@@ -65,5 +88,13 @@ public class WordPlacement implements Comparable {
 
     public void setWords(List<SingleWordOnBoard> words) {
         this.words = words;
+    }
+
+    public char[] getPlacedLetters() {
+        return placedLetters;
+    }
+
+    public void setPlacedLetters(char[] placedLetters) {
+        this.placedLetters = placedLetters;
     }
 }

@@ -84,6 +84,14 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
         this.tiles = tiles;
     }
 
+    public void letterDeleted(VisibleTile tile) {
+        if (isMoveAcross()) {
+            moveFocus(tile, Direction.LEFT);
+        } else {
+            moveFocus(tile, Direction.UP);
+        }
+    }
+    
     public void letterSaved(VisibleTile tile) {
 
     }
