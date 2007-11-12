@@ -32,7 +32,16 @@ public class TileLine {
 
     @Override
     public String toString() {
-        String result = "startRow = " + startRow + "; startCol = " + startCol + "; length = " + length + "; isAcross" + isAcross;
-        return result;
+        //String result = "startRow = " + startRow + "; startCol = " + startCol + "; length = " + length + "; isAcross" + isAcross;
+        StringBuffer sb = new StringBuffer();
+        if (isAcross) {
+            sb.append("Going across, ");
+        } else {
+            sb.append("Going down, ");
+        }
+        sb.append("starting at:\n");
+        sb.append("      Row: " + (startRow + 1));
+        sb.append("\n      Column: " + (startCol + 1));
+        return sb.toString();
     }
 }

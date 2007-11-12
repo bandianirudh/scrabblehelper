@@ -3,7 +3,6 @@
  *
  * Created on November 10, 2007, 2:02 PM
  */
-
 package gui;
 
 import java.util.Collections;
@@ -18,19 +17,35 @@ import scrabbletools.WordPlacement;
  * @author  Nick
  */
 public class ScrabbleWindow extends javax.swing.JFrame {
+
     BoardAnagramUtils utils = new BoardAnagramUtils(new Board());
-    
+
     /** Creates new form ScrabbleWindow */
     public ScrabbleWindow() {
         super("Scrabble Solver");
         initComponents();
         utils.setDictionary(StaticFields.getDictionary());
     }
-    
+
     public void setLetters(char[][] letters) {
         utils.getBoard().setLetters(letters);
     }
-    
+
+    public void solve() {
+        setLetters(scrabbleBoard.getCharArray());
+        utils.setLetters(rackLetterField.getText().toUpperCase().toCharArray());
+        long startTime = System.currentTimeMillis();
+        List<WordPlacement> words = utils.findAllBoardPossibilities();
+        long time = System.currentTimeMillis() - startTime;
+        Collections.sort(words);
+        resultDisplay.setText("");
+        for (WordPlacement wp : words) {
+            resultDisplay.append(wp.toString() + "\n\n");
+        }
+        resultDisplay.append("\n\n\nNumber of words:  " + words.size() + "\n");
+        resultDisplay.append("Time to process (in millis):  " + time);
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -49,8 +64,13 @@ public class ScrabbleWindow extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         rackLetterField.setFont(new java.awt.Font("Tahoma", 0, 36));
+        rackLetterField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rackLetterFieldActionPerformed(evt);
+            }
+        });
 
-        jButton1.setText("Find all possiblities ");
+        jButton1.setText("Solve!");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -80,9 +100,9 @@ public class ScrabbleWindow extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(jButton1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(anagramButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(anagramButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(rackLetterField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -95,8 +115,8 @@ public class ScrabbleWindow extends javax.swing.JFrame {
                         .addComponent(rackLetterField, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1)
-                            .addComponent(anagramButton))
+                            .addComponent(anagramButton)
+                            .addComponent(jButton1))
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1))
                     .addComponent(scrabbleBoard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -107,35 +127,28 @@ public class ScrabbleWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-          setLetters(scrabbleBoard.getCharArray());
-          utils.setLetters(rackLetterField.getText().toUpperCase().toCharArray());
-          long startTime = System.currentTimeMillis();
-          List<WordPlacement> words = utils.findAllBoardPossibilities();
-          long time = System.currentTimeMillis() - startTime;
-          Collections.sort(words);
-          resultDisplay.setText("");
-          for (WordPlacement wp : words) {
-              resultDisplay.append(wp.getLine().toString() + "\n");
-              resultDisplay.append(wp.toString() + "\n\n");
-          }
-          resultDisplay.append("\n\n\nTime to process (in millis):  " + time);
+        solve();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void anagramButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_anagramButtonActionPerformed
         new AnagramWindow().setVisible(true);        
 }//GEN-LAST:event_anagramButtonActionPerformed
-    
+
+    private void rackLetterFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rackLetterFieldActionPerformed
+        solve();
+    }//GEN-LAST:event_rackLetterFieldActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ScrabbleWindow().setVisible(true);
-            }
-        });
+
+                    public void run() {
+                        new ScrabbleWindow().setVisible(true);
+                    }
+                });
     }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton anagramButton;
     private javax.swing.JButton jButton1;
@@ -144,5 +157,5 @@ public class ScrabbleWindow extends javax.swing.JFrame {
     private javax.swing.JTextArea resultDisplay;
     private gui.ScrabbleBoardPanel scrabbleBoard;
     // End of variables declaration//GEN-END:variables
-    
+
 }
