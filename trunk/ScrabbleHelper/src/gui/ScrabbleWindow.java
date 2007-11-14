@@ -7,9 +7,13 @@ package gui;
 
 import java.util.Collections;
 import java.util.List;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 import scrabblehelper.StaticFields;
 import scrabbletools.Board;
 import scrabbletools.BoardAnagramUtils;
+import scrabbletools.LetterScores;
 import scrabbletools.WordPlacement;
 
 /**
@@ -24,7 +28,21 @@ public class ScrabbleWindow extends javax.swing.JFrame {
     public ScrabbleWindow() {
         super("Scrabble Solver");
         initComponents();
+        setResizable(false);
         utils.setDictionary(StaticFields.getDictionary());
+        rackLetterField.setDocument(new PlainDocument() {
+
+            @Override
+            public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+                        String upCase = str.toUpperCase();
+                        if (this.getLength() >= 7) {
+                            return;
+                        }
+                        if (Character.isLetter(upCase.charAt(0)) || str.charAt(0) == LetterScores.UNUSED_BLANK) {
+                            super.insertString(offs, upCase, a);
+                        }
+                    }
+                });
     }
 
     public void setLetters(char[][] letters) {
@@ -42,7 +60,7 @@ public class ScrabbleWindow extends javax.swing.JFrame {
         for (WordPlacement wp : words) {
             resultDisplay.append(wp.toString() + "\n\n");
         }
-        resultDisplay.append("\n\n\nNumber of words:  " + words.size() + "\n");
+        resultDisplay.append("Number of words:  " + words.size() + "\n");
         resultDisplay.append("Time to process (in millis):  " + time);
     }
 
@@ -60,17 +78,27 @@ public class ScrabbleWindow extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         resultDisplay = new javax.swing.JTextArea();
         anagramButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        rackLetterField.setFont(new java.awt.Font("Tahoma", 0, 36));
+        rackLetterField.setFont(new java.awt.Font("Tahoma", 0, 42));
+        rackLetterField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         rackLetterField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rackLetterFieldActionPerformed(evt);
             }
         });
+        rackLetterField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                rackLetterFieldKeyReleased(evt);
+            }
+        });
 
-        jButton1.setText("Solve!");
+        jButton1.setText("Solve Board!");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -88,6 +116,18 @@ public class ScrabbleWindow extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("enter as zero (0) in rack.");
+
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("To play blank tile,");
+
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("This will significantly");
+
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("extend calculation time.");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -97,13 +137,20 @@ public class ScrabbleWindow extends javax.swing.JFrame {
                 .addComponent(scrabbleBoard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(anagramButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(rackLetterField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(anagramButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(rackLetterField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -112,12 +159,22 @@ public class ScrabbleWindow extends javax.swing.JFrame {
                 .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(rackLetterField, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(rackLetterField, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(anagramButton)
+                                    .addComponent(jButton1)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel4)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(anagramButton)
-                            .addComponent(jButton1))
-                        .addGap(18, 18, 18)
                         .addComponent(jScrollPane1))
                     .addComponent(scrabbleBoard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -138,6 +195,10 @@ public class ScrabbleWindow extends javax.swing.JFrame {
         solve();
     }//GEN-LAST:event_rackLetterFieldActionPerformed
 
+    private void rackLetterFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rackLetterFieldKeyReleased
+           
+    }//GEN-LAST:event_rackLetterFieldKeyReleased
+
     /**
      * @param args the command line arguments
      */
@@ -152,6 +213,10 @@ public class ScrabbleWindow extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton anagramButton;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField rackLetterField;
     private javax.swing.JTextArea resultDisplay;

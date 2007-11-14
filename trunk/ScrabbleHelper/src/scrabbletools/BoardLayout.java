@@ -22,7 +22,7 @@ public class BoardLayout {
     public static final char TRIPLE_LETTER = '3';
     public static final char DOUBLE_WORD = '4';
     public static final char TRIPLE_WORD = '5';
-    public static final Color BEIGE = new Color(250, 250, 10, 100);
+    public static final Color BEIGE = new Color(200, 200, 100);
     public static char[][] charBoardValues;
     public static final String[] stringBoardValues = {"500200050002005",
             "040003000300040",

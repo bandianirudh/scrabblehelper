@@ -91,7 +91,7 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
             moveFocus(tile, Direction.UP);
         }
     }
-    
+
     public void letterSaved(VisibleTile tile) {
 
     }
@@ -118,6 +118,7 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
                 }
             } else {
                 setMoveAcross(false);
+                tile.repaint();
                 return;
             }
         } else if (d == Direction.UP) {
@@ -130,6 +131,7 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
                 }
             } else {
                 setMoveAcross(false);
+                tile.repaint();
                 return;
             }
 
@@ -143,6 +145,7 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
                 }
             } else {
                 setMoveAcross(true);
+                tile.repaint();
                 return;
             }
         } else if (d == Direction.RIGHT) {
@@ -155,6 +158,7 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
                 }
             } else {
                 setMoveAcross(true);
+                tile.repaint();
                 return;
             }
         }
