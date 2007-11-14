@@ -42,7 +42,6 @@ public class VisibleTile extends JPanel implements MouseListener {
     int col;
     int row;
     ScrabbleBoardPanel panel;
-    
 
     public VisibleTile(ScrabbleBoardPanel panel, char tileType, int row, int col) {
         super();
@@ -83,10 +82,12 @@ public class VisibleTile extends JPanel implements MouseListener {
 
     public void edit() {
         final ScrabbleBoardPanel sbp = panel;
-        final JTextField editor = new JTextField(Character.toString(getLetter()), 1);
-        editor.setForeground(new Color(255, 255, 255, 10));
-        editor.setForeground(new Color(255, 255, 255, 10));
-        
+        final JTextField editor = new JTextField(Character.toString(getLetter()), 1) {
+
+                    public void paint(Graphics g) {
+                    }
+                };
+
         editor.setDocument(new PlainDocument() {
 
                     public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
@@ -129,6 +130,10 @@ public class VisibleTile extends JPanel implements MouseListener {
                         stopEditing(editor);
                     }
                 });
+
+        //editor.setForeground(new Color(125, 125, 125, 200));
+        //editor.setForeground(new Color(125, 125, 125, 200));
+
         remove(letterLabel);
         add(editor, BorderLayout.CENTER);
         editor.requestFocus();
@@ -140,17 +145,18 @@ public class VisibleTile extends JPanel implements MouseListener {
 
     public void registerKeys(final JTextField editor) {
         final ScrabbleBoardPanel sbp = panel;
-        
+
         editor.getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0),
                 "DELETE");
         editor.getActionMap().put("DELETE", new AbstractAction() {
+
                     public void actionPerformed(ActionEvent e) {
                         editor.setText(Character.toString(LetterScores.EMPTY_SQUARE));
                         stopEditing(editor);
                         sbp.letterDeleted(VisibleTile.this);
                     }
                 });
-        
+
         editor.getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0),
                 "UP");
         editor.getActionMap().put("UP", new AbstractAction() {
@@ -217,10 +223,27 @@ public class VisibleTile extends JPanel implements MouseListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(BoardLayout.getColorFromTileType(tileType));
-        g.fillRect(0, 0, getWidth(), getHeight());
-        g.setColor(Color.BLACK);
-        if (panel.isMoveAcross()) {
+        g.fillRect(1, 1, getWidth(), getHeight());
+    }
+
+    public void paint(Graphics g) {
+        if (getComponent(0) != null && getComponent(0) instanceof JTextField) {
+            g.setColor(BoardLayout.getColorFromTileType(tileType));
+            g.fillRect(1, 1, getWidth(), getHeight());
+            g.setColor(new Color(100, 100, 255, 255));
+            g.fillRect(1, 1, getWidth(), getHeight());
             
+            g.setColor(Color.BLACK);
+                int lineLength = 5;
+            if (panel.isMoveAcross()) {
+                g.drawLine(1, getHeight() / 2, 5, getHeight() / 2);
+                g.drawLine(getWidth() - lineLength, getHeight() / 2, getWidth(), getHeight() / 2);
+            } else {
+                g.drawLine(getWidth() / 2, 1, getWidth() / 2, lineLength);
+                g.drawLine(getWidth() / 2, getHeight() - lineLength, getWidth() / 2, getHeight());
+            }
+        } else {
+            super.paint(g);
         }
     }
 
