@@ -37,7 +37,10 @@ public class LetterScores {
     }
 
     public static boolean isValidLetter(char c) {
-        return (Arrays.binarySearch(allLetters, c) >= 0);
+        for (int i = 0; i < allLetters.length; i++) {
+            if (allLetters[i] == c) return true;
+        }
+        return false;
     }
 
     public static char getCharFromInt(int i) {

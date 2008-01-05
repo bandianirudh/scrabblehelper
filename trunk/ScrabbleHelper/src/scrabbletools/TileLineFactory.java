@@ -17,18 +17,16 @@ import scrabbletools.BoardAnagramUtils.Square;
  * @author Nick
  */
 public class TileLineFactory {
-    char[] sortedRack;
-    Board board;
     /** Creates a new instance of TileLineFactory */
 
-    public TileLineFactory(Board board, char[] rack) {
-        this.board = board;
-        Arrays.sort(rack);
-        this.sortedRack = rack;
+    public TileLineFactory() {
     }
 
-    public ArrayList<TileLine> generateTileLines(Square[][] processedBoard) {
+    public ArrayList<TileLine> generateTileLines(Square[][] processedBoard, char[] rack1) {
         ArrayList<TileLine> result = new ArrayList<TileLine>(100);
+        char[] sortedRack = rack1.clone();
+
+        Arrays.sort(sortedRack);
 
         // scan across
         for (int row = 0; row < processedBoard.length; row++) {
@@ -62,6 +60,18 @@ public class TileLineFactory {
                         isConnected = true;
                         if (!s.horizontalAdjascent && s.verticalPossibilities.length == 0) {
                             break endColSearch;
+                        } else if (Arrays.binarySearch(sortedRack, LetterScores.UNUSED_BLANK) >= 0) {
+                        } else if (!s.horizontalAdjascent) {
+                            boolean valid = false;
+                            for (int poss = 0; poss < s.verticalPossibilities.length; poss++) {
+                                if (Arrays.binarySearch(sortedRack, s.verticalPossibilities[poss]) >= 0) {
+                                    valid = true;
+                                    continue;
+                                }
+                            }
+                            if (!valid) {
+                                break endColSearch;
+                            }
                         }
                     }
                     if (isConnected) {
@@ -82,9 +92,11 @@ public class TileLineFactory {
                     break check;
                 }
             }
+
             if (!colConnected) { //if it isn't worthwhile looking, don't
                 continue;
             }
+
             for (int startRow = 0; startRow < (processedBoard.length - 1); startRow++) {
                 if (processedBoard[startRow][col].isOccupied()) {
                     continue;
@@ -103,6 +115,18 @@ public class TileLineFactory {
                         isConnected = true;
                         if (!s.verticalAdjascent && s.horizontalPossibilities.length == 0) {
                             break endRowSearch;
+                        } else if (Arrays.binarySearch(sortedRack, LetterScores.UNUSED_BLANK) >= 0) {
+                        } else if (!s.verticalAdjascent) {
+                            boolean valid = false;
+                            for (int poss = 0; poss < s.horizontalPossibilities.length; poss++) {
+                                if (Arrays.binarySearch(sortedRack, s.horizontalPossibilities[poss]) >= 0) {
+                                    valid = true;
+                                    continue;
+                                }
+                            }
+                            if (!valid) {
+                                break endRowSearch;
+                            }
                         }
                     }
                     if (isConnected) {

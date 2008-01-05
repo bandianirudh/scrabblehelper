@@ -116,11 +116,11 @@ public class BoardAnagramUtils {
         Arrays.sort(sortedRack);
 
         AnagramPermuter permuter = new AnagramPermuter(sortedRack);
-        TileLineFactory t = new TileLineFactory(getBoard(), sortedRack.clone());
+        TileLineFactory t = new TileLineFactory();
 
         generatePossibilities();
 
-        ArrayList<TileLine> lines = t.generateTileLines(processedBoard);
+        ArrayList<TileLine> lines = t.generateTileLines(processedBoard, rack.letters);
         System.out.println("Number of lines to calculate:  " + lines.size());
 
         for (int i = 0; i < lines.size(); i++) {
@@ -287,7 +287,7 @@ public class BoardAnagramUtils {
 
                 //tester:  board.getWords(1, 0, true, "ODE".toCharArray())
                 //
-                
+                /*
                 if (tileLine.length > 1) {
                     if (tileLine.isAcross) {
                         if (!getDictionary().isWord(
@@ -303,7 +303,7 @@ public class BoardAnagramUtils {
                         }
                     }
                 }
-                 
+                 */
                 
                 for (char[] possibleWord : possibleWords) {
                     if (!dictionary.isWord(possibleWord)) {
@@ -324,7 +324,7 @@ public class BoardAnagramUtils {
                 } else {
                     for (int i = 0; i < rackLettersReduced.length; i++) {
                         if (frequency[i] > 0 &&
-                                Arrays.binarySearch(possibilities[currentSquare], rackLettersReduced[i]) >= 0) {
+                                arrayContains(possibilities[currentSquare], rackLettersReduced[i])) {
                             currentWord[currentSquare] = rackLettersReduced[i];
                             frequency[i]--;
                             currentSquare++;
@@ -346,6 +346,13 @@ public class BoardAnagramUtils {
                     return;
                 }
             }
+        }
+        
+        public boolean arrayContains(char[] array, char c) {
+            for(int i = 0; i < array.length; i++) {
+                if (array[i] == c) return true;
+            }
+            return false;
         }
 
         public boolean containsUseableBlank() {

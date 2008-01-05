@@ -72,21 +72,15 @@ public class Board {
     }
 
     public boolean squareHasAdjascentVerticalLetter(int row, int col) {
-        boolean result = false;
         char left = getValue(row - 1, col);
         char right = getValue(row + 1, col);
-        result = result || LetterScores.isValidLetter(left);
-        result = result || LetterScores.isValidLetter(right);
-        return result;
+        return LetterScores.isValidLetter(left) || LetterScores.isValidLetter(right);
     }
 
     public boolean squareHasAdjascentHorizontalLetter(int row, int col) {
-        boolean result = false;
         char above = getValue(row, col - 1);
         char below = getValue(row, col + 1);
-        result = result || LetterScores.isValidLetter(above);
-        result = result || LetterScores.isValidLetter(below);
-        return result;
+        return LetterScores.isValidLetter(above) || LetterScores.isValidLetter(below);
     }
 
     public boolean squareHasAdjascentLetter(int row, int col) {
@@ -186,11 +180,6 @@ public class Board {
                 getCharLine(startRow, startCol, word.length, isAcross),
                 word,
                 words, score);
-    }
-
-    public int getScoreFromWord(int row, int col, char[] word) {
-
-        return 0;
     }
 
     public List<char[]> getWordsFromSingleLetterPlay(int row, int col, char letter) {
