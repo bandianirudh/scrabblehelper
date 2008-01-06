@@ -40,6 +40,7 @@ public class WordPlacement implements Comparable {
         for (int i = 0; i < getWords().size(); i++) {
             sb.append("      " + (i + 1) + ":  ");
             sb.append(getWords().get(i).word);
+            sb.append(" (" + getWords().get(i).score + ")");
             sb.append("\n");
         }
         sb.append("\nTotal score:  " + getScore());

@@ -17,6 +17,8 @@ public class SingleWordOnBoard {
         public boolean[] occupiedTiles;
         public char[] word;
         
+        public int score = 0;
+        
         public SingleWordOnBoard(int startRow, int startCol, char[] word,
                 boolean isAcross, boolean[] occupiedTiles) {
             this.startRow = startRow;

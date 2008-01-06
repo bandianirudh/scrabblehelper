@@ -6,14 +6,10 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JList;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
+import persistence.SavedBoard;
 import scrabbletools.BoardLayout;
 import scrabbletools.LetterScores;
 
@@ -72,6 +68,16 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
             }
             g.drawLine(currentX, 0, currentX, getHeight());
         }
+    }
+    
+    public void setBoard(SavedBoard sb) {
+        char[][] boardLetters = sb.getBoard();
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
+                tiles[row][col].setLetter(boardLetters[row][col]);
+            }
+        }
+        repaint();
     }
 
     public void initializeTiles() {
