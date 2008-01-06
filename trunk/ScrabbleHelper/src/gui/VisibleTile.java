@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -85,8 +86,6 @@ public class VisibleTile extends JPanel implements MouseListener {
         final JTextField editor = new JTextField(Character.toString(getLetter()), 1) {
 
             public void paint(Graphics g) {
-            //g.setFont(Font.decode("Arial 22"));
-            //g.drawString(String.valueOf(letter), 0, getHeight());
             }
         };
 
@@ -95,7 +94,11 @@ public class VisibleTile extends JPanel implements MouseListener {
             public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
                 if (Arrays.binarySearch(LetterScores.allLetters, str.charAt(0)) >= 0 || str.charAt(0) == LetterScores.EMPTY_SQUARE) {
                     super.remove(0, super.getLength());
-                    super.insertString(0, str.toUpperCase(), a);
+                    if (Character.isUpperCase(str.charAt(0))) {
+                        super.insertString(0, str.toLowerCase(), a);
+                    } else {
+                        super.insertString(0, str.toUpperCase(), a);
+                    }
                     if (editor.getText().length() > 0) {
                         editor.setSelectionStart(0);
                         editor.setSelectionEnd(1);
@@ -104,16 +107,23 @@ public class VisibleTile extends JPanel implements MouseListener {
                         panel.letterEnterred(VisibleTile.this, editor);
                     }
                 }
-            }
-
-            public void removeUpdate(DefaultDocumentEvent chng) {
+            }; 
+               
+        public void removeUpdate(DefaultDocumentEvent chng) {
                 VisibleTile.this.repaint();
                 super.removeUpdate(chng);
             }
         });
+        
         registerKeys(editor);
         editor.setFont(Font.decode("Arial 22"));
-        editor.setText(Character.toString(getLetter()));
+        if (Character.isUpperCase(getLetter())) {
+            editor.setText(Character.toString(getLetter()).toLowerCase());
+            //System.out.println("Upper");
+        } else {
+            editor.setText(Character.toString(getLetter()).toUpperCase());
+            //System.out.println("Lower");
+        }
         if (editor.getText().length() > 0) {
             editor.setSelectionStart(0);
             editor.setSelectionEnd(1);
@@ -125,7 +135,7 @@ public class VisibleTile extends JPanel implements MouseListener {
 
             public void focusLost(FocusEvent e) {
                 if (editor.getText().length() > 0) {
-                    setLetter(editor.getText().toUpperCase().charAt(0));
+                    setLetter(editor.getText().charAt(0));
                 }
                 stopEditing(editor);
             }
@@ -218,7 +228,7 @@ public class VisibleTile extends JPanel implements MouseListener {
     public void stopEditing(JTextField editor) {
         if (editor != null) {
             if (editor.getText().length() > 0 && editor.getText().charAt(0) != LetterScores.EMPTY_SQUARE) {
-                char l = editor.getText().toUpperCase().charAt(0);
+                char l = editor.getText().charAt(0);
                 setLetter(l);
                 panel.letterSaved(this);
                 for (FocusListener fl : editor.getFocusListeners()) {
@@ -240,6 +250,17 @@ public class VisibleTile extends JPanel implements MouseListener {
         super.paintComponent(g);
         g.setColor(BoardLayout.getColorFromTileType(tileType));
         g.fillRect(1, 1, getWidth(), getHeight());
+        if (letter != LetterScores.EMPTY_SQUARE) {
+            Color emptyColor = BoardLayout.getColorFromTileType(BoardLayout.SINGLE_LETTER);
+            g.setColor(new Color(emptyColor.getRed(), emptyColor.getGreen(), emptyColor.getBlue(), 160));
+            g.fillRect(1, 1, getWidth() - 1, getHeight() - 1);
+            g.fillRect(2, 2, getWidth() - 3, getHeight() - 3);
+            g.fillRect(2, 2, getWidth() - 3, getHeight() - 3);
+            g.setColor(new Color(emptyColor.getRed(), emptyColor.getGreen(), emptyColor.getBlue(), 255));
+            g.fillRect(3, 3, getWidth() - 5, getHeight() - 5);
+            g.setColor(new Color(255, 255, 255, 90));
+            g.fillRect(4, 4, getWidth() - 7, getHeight() - 7);
+        }
     }
 
     public void paint(Graphics g) {
@@ -261,8 +282,9 @@ public class VisibleTile extends JPanel implements MouseListener {
                 g.drawLine(getWidth() / 2, 1, getWidth() / 2, lineLength);
                 g.drawLine(getWidth() / 2, getHeight() - lineLength, getWidth() / 2, getHeight());
             }
+        } else if (letter != LetterScores.EMPTY_SQUARE) {
+            super.paint(g);
         } else {
-            letterLabel.paint(g);
             super.paint(g);
         }
     }

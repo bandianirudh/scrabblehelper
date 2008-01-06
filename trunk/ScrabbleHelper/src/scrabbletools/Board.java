@@ -172,7 +172,9 @@ public class Board {
         
         int score = 0;
         for (SingleWordOnBoard swop: words) {
-            score += BoardLayout.getWordScore(swop);
+            int wordScore = BoardLayout.getWordScore(swop);
+            swop.score = wordScore;
+            score += wordScore;
         }
         
         
