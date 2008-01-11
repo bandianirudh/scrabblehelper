@@ -10,14 +10,15 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.AbstractAction;
 import javax.swing.JLabel;
@@ -43,6 +44,7 @@ public class VisibleTile extends JPanel implements MouseListener {
     int col;
     int row;
     ScrabbleBoardPanel panel;
+    private boolean editing = false;
 
     public VisibleTile(ScrabbleBoardPanel panel, char tileType, int row, int col) {
         super();
@@ -82,6 +84,7 @@ public class VisibleTile extends JPanel implements MouseListener {
     }
 
     public void edit() {
+
         final ScrabbleBoardPanel sbp = panel;
         final JTextField editor = new JTextField(Character.toString(getLetter()), 1) {
 
@@ -92,7 +95,7 @@ public class VisibleTile extends JPanel implements MouseListener {
         editor.setDocument(new PlainDocument() {
 
             public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
-                if (Arrays.binarySearch(LetterScores.allLetters, str.charAt(0)) >= 0 || str.charAt(0) == LetterScores.EMPTY_SQUARE) {
+                if (Arrays.binarySearch(LetterScores.allLetters, str.charAt(0)) >= 0) {// || str.charAt(0) == LetterScores.EMPTY_SQUARE) {
                     super.remove(0, super.getLength());
                     if (Character.isUpperCase(str.charAt(0))) {
                         super.insertString(0, str.toLowerCase(), a);
@@ -103,12 +106,13 @@ public class VisibleTile extends JPanel implements MouseListener {
                         editor.setSelectionStart(0);
                         editor.setSelectionEnd(1);
                     }
-                    if (str.charAt(0) != getLetter()) {
+                    if (isEditing() &&
+                            Character.toUpperCase(str.charAt(0)) != Character.toUpperCase(getLetter())) {
                         panel.letterEnterred(VisibleTile.this, editor);
                     }
                 }
             }; 
-               
+            
         public void removeUpdate(DefaultDocumentEvent chng) {
                 VisibleTile.this.repaint();
                 super.removeUpdate(chng);
@@ -119,10 +123,10 @@ public class VisibleTile extends JPanel implements MouseListener {
         editor.setFont(Font.decode("Arial 22"));
         if (Character.isUpperCase(getLetter())) {
             editor.setText(Character.toString(getLetter()).toLowerCase());
-            //System.out.println("Upper");
+        //System.out.println("Upper");
         } else {
             editor.setText(Character.toString(getLetter()).toUpperCase());
-            //System.out.println("Lower");
+        //System.out.println("Lower");
         }
         if (editor.getText().length() > 0) {
             editor.setSelectionStart(0);
@@ -153,6 +157,7 @@ public class VisibleTile extends JPanel implements MouseListener {
 
         remove(letterLabel);
         add(editor, BorderLayout.CENTER);
+        setEditing(true);
         editor.requestFocus();
         repaint();
         doLayout();
@@ -162,7 +167,38 @@ public class VisibleTile extends JPanel implements MouseListener {
 
     public void registerKeys(final JTextField editor) {
         final ScrabbleBoardPanel sbp = panel;
+        
+        ArrayList<KeyListener> kls = new ArrayList<KeyListener>();
+        for(KeyListener kl : editor.getKeyListeners()) {
+            kls.add(kl);
+            editor.removeKeyListener(kl);
+        }
+        
+        editor.addKeyListener(new KeyListener() {
 
+            public void keyTyped(KeyEvent e) {
+                if (e.isShiftDown()) {
+                    System.out.println("Shift is typed");
+                    e.consume();
+                }
+            }
+
+            public void keyPressed(KeyEvent e) {
+                if (e.isShiftDown() && e.getKeyCode() != e.VK_SHIFT) {
+                    System.out.println("Shift is pressed");
+                    e.consume();
+                }
+            }
+
+            public void keyReleased(KeyEvent e) {
+                if (e.isShiftDown() && e.getKeyCode() != e.VK_SHIFT) {
+                    System.out.println("Shift is released");
+                    e.consume();
+                }
+                System.out.println("Key Released");
+            }
+        });
+        
         editor.getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0),
                 "BACKSPACE");
         editor.getActionMap().put("BACKSPACE", new AbstractAction() {
@@ -241,13 +277,16 @@ public class VisibleTile extends JPanel implements MouseListener {
         removeAll();
         add(letterLabel, BorderLayout.CENTER);
         doLayout();
-        repaint();
+        //repaint();
         Rectangle r = getBounds();
         getParent().repaint(r.x, r.y, r.width, r.height);
+        setEditing(false);
     }
 
     public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+        if (getComponentCount() > 0) {
+            super.paintComponent(g);
+        }
         g.setColor(BoardLayout.getColorFromTileType(tileType));
         g.fillRect(1, 1, getWidth(), getHeight());
         if (letter != LetterScores.EMPTY_SQUARE) {
@@ -264,7 +303,7 @@ public class VisibleTile extends JPanel implements MouseListener {
     }
 
     public void paint(Graphics g) {
-        if (getComponent(0) != null && getComponent(0) instanceof JTextField) {
+        if (isEditing() && getComponent(0) != null && getComponent(0) instanceof JTextField) {
             g.setColor(Color.WHITE);
             g.fillRect(1, 1, getWidth(), getHeight());
             letterLabel.paint(g);
@@ -307,5 +346,13 @@ public class VisibleTile extends JPanel implements MouseListener {
     }
 
     public void mouseExited(MouseEvent e) {
+    }
+
+    public boolean isEditing() {
+        return editing;
+    }
+
+    public void setEditing(boolean editing) {
+        this.editing = editing;
     }
 }

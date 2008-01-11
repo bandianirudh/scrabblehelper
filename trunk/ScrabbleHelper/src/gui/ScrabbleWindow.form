@@ -121,7 +121,7 @@
           <Properties>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value="Scrabble helper was written by Nicholas Wilkie, for no good reason.&#xa;&#xa;Because it was just for fun, I don&apos;t care what you do with this program.&#xa;&#xa;If you want to contact me, just drop an email to nwilkie@bigfoot.com.  As I&apos;m not&#xa;really putting any effort into promoting this, I&apos;m actually not expecting to hear from&#xa;anybody.  But I like surprises, so if anybody reads this, go ahead and sent me a&#xa;hollar."/>
+            <Property name="text" type="java.lang.String" value="Hold down shift while filling in the board to indicate played blanks.&#xa;They will show up as lowercase letters.&#xa;&#xa;Email me at nwilkie@bigfoot.com&#xa;"/>
             <Property name="wrapStyleWord" type="boolean" value="true"/>
           </Properties>
         </Component>
