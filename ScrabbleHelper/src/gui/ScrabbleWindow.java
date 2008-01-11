@@ -125,7 +125,7 @@ public class ScrabbleWindow extends javax.swing.JFrame {
 
         resultDisplay.setColumns(20);
         resultDisplay.setRows(5);
-        resultDisplay.setText("Scrabble helper was written by Nicholas Wilkie, for no good reason.\n\nBecause it was just for fun, I don't care what you do with this program.\n\nIf you want to contact me, just drop an email to nwilkie@bigfoot.com.  As I'm not\nreally putting any effort into promoting this, I'm actually not expecting to hear from\nanybody.  But I like surprises, so if anybody reads this, go ahead and sent me a\nhollar.");
+        resultDisplay.setText("Hold down shift while filling in the board to indicate played blanks.\nThey will show up as lowercase letters.\n\nEmail me at nwilkie@bigfoot.com\n");
         resultDisplay.setWrapStyleWord(true);
         jScrollPane1.setViewportView(resultDisplay);
 
