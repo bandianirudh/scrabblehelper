@@ -36,8 +36,8 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
 
         LEFT, RIGHT, UP, DOWN
     }
-    /** Creates new form ScrabbleBoardPanel */
 
+    /** Creates new form ScrabbleBoardPanel */
     public ScrabbleBoardPanel() {
         initComponents();
         GridLayout gl = new GridLayout();
@@ -69,7 +69,7 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
             g.drawLine(currentX, 0, currentX, getHeight());
         }
     }
-    
+
     public void setBoard(SavedBoard sb) {
         char[][] boardLetters = sb.getBoard();
         for (int row = 0; row < ROWS; row++) {
@@ -103,11 +103,7 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
         }
     }
 
-    public void letterSaved(VisibleTile tile) {
-
-    }
-
-    public void letterEnterred(VisibleTile tile, JTextField editor) {
+    public void letterEnterred(VisibleTile tile) {
         if (isMoveAcross()) {
             moveFocus(tile, Direction.RIGHT);
         } else {
@@ -124,8 +120,8 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
                 if (row < (ROWS - 1)) {
                     row++;
                 } else {
-                    tile.stopEditing(null);
-                    return;
+                    tile.stopEditing();
+                    requestFocus();
                 }
             } else {
                 setMoveAcross(false);
@@ -137,22 +133,21 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
                 if (row > 0) {
                     row--;
                 } else {
-                    tile.stopEditing(null);
-                    return;
+                    tile.stopEditing();
+                    requestFocus();
                 }
             } else {
                 setMoveAcross(false);
                 tile.repaint();
                 return;
             }
-
         } else if (d == Direction.LEFT) {
             if (moveAcross) {
                 if (col > 0) {
                     col--;
                 } else {
-                    tile.stopEditing(null);
-                    return;
+                    tile.stopEditing();
+                    requestFocus();
                 }
             } else {
                 setMoveAcross(true);
@@ -164,8 +159,8 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
                 if (col < (COLS - 1)) {
                     col++;
                 } else {
-                    tile.stopEditing(null);
-                    return;
+                    tile.stopEditing();
+                    requestFocus();
                 }
             } else {
                 setMoveAcross(true);
@@ -173,7 +168,7 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
                 return;
             }
         }
-        tile.stopEditing(null);
+        tile.stopEditing();
         tiles[row][col].edit();
     }
 
@@ -201,5 +196,4 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-
 }
