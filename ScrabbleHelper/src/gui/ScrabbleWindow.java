@@ -5,9 +5,10 @@
  */
 package gui;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.Collections;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
@@ -32,6 +33,12 @@ public class ScrabbleWindow extends javax.swing.JFrame {
     public ScrabbleWindow() {
         super("Scrabble Solver");
         initComponents();
+        
+        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (d.width - getWidth()) / 2;
+        int y = (d.height - getHeight()) / 2;
+        setLocation(x, y);
+        
         setResizable(false);
         utils.setDictionary(StaticFields.getDictionary());
         rackLetterField.setDocument(new PlainDocument() {
@@ -77,8 +84,8 @@ public class ScrabbleWindow extends javax.swing.JFrame {
         for (WordPlacement wp : words) {
             resultDisplay.append(wp.toString() + "\n\n");
         }
-        resultDisplay.append("Number of words:  " + words.size() + "\n");
-        resultDisplay.append("Time to process (in millis):  " + time);
+        resultDisplay.append("Total number of unique word placements:  " + words.size() + "\n");
+        resultDisplay.append("Time to process (in milliseconds):  " + time);
     }
 
     /** This method is called from within the constructor to
@@ -124,8 +131,10 @@ public class ScrabbleWindow extends javax.swing.JFrame {
         });
 
         resultDisplay.setColumns(20);
+        resultDisplay.setEditable(false);
+        resultDisplay.setLineWrap(true);
         resultDisplay.setRows(5);
-        resultDisplay.setText("Hold down shift while filling in the board to indicate played blanks.\nThey will show up as lowercase letters.\n\nEmail me at nwilkie@bigfoot.com\n");
+        resultDisplay.setText("Instructions:\n\nFill in the board, enter your letters in the rack above, then press Solve Board!\n\n\n\nExtra Instructions:\n\nHold down shift while filling in the board to indicate played blanks.  They will show up as lowercase letters.\n\nUse the arrow keys to toggle between typing horizontally and vertically.\n\n\n\n\nEmail suggestions or comments to nwilkie@bigfoot.com\n");
         resultDisplay.setWrapStyleWord(true);
         jScrollPane1.setViewportView(resultDisplay);
 

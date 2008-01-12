@@ -5,17 +5,11 @@
 package scrabblehelper;
 
 import gui.ErrorWindow;
-import gui.FileTester;
+import gui.LoadingWindow;
 import gui.ScrabbleWindow;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
-import java.util.ArrayList;
-import javax.swing.JOptionPane;
 import scrabbletools.IntHashDictionary;
 
 /**
@@ -58,7 +52,10 @@ public class Startup {
             }*/
             try {
                 URL url = ClassLoader.getSystemClassLoader().getResource("dictionaries/TWL06.txt");
+                LoadingWindow lw = new LoadingWindow();
+                lw.setVisible(true);
                 IntHashDictionary d = new IntHashDictionary(url);
+                lw.dispose();
                 StaticFields.setDictionary(d);
             } catch (Exception ex) {
                 StringWriter sw = new StringWriter();
