@@ -120,8 +120,10 @@
         <Component class="javax.swing.JTextArea" name="resultDisplay">
           <Properties>
             <Property name="columns" type="int" value="20"/>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="lineWrap" type="boolean" value="true"/>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value="Hold down shift while filling in the board to indicate played blanks.&#xa;They will show up as lowercase letters.&#xa;&#xa;Email me at nwilkie@bigfoot.com&#xa;"/>
+            <Property name="text" type="java.lang.String" value="Instructions:&#xa;&#xa;Fill in the board, enter your letters in the rack above, then press Solve Board!&#xa;&#xa;&#xa;&#xa;Extra Instructions:&#xa;&#xa;Hold down shift while filling in the board to indicate played blanks.  They will show up as lowercase letters.&#xa;&#xa;Use the arrow keys to toggle between typing horizontally and vertically.&#xa;&#xa;&#xa;&#xa;&#xa;Email suggestions or comments to nwilkie@bigfoot.com&#xa;"/>
             <Property name="wrapStyleWord" type="boolean" value="true"/>
           </Properties>
         </Component>

@@ -92,10 +92,6 @@ public class VisibleTile extends JPanel implements MouseListener, FocusListener,
         requestFocus();
         setEditing(true);
         repaint();
-        if (hasFocus()) {
-            System.out.println("hasFocus");
-        }
-        repaint();
         doLayout();
         Rectangle r = getBounds();
         getParent().repaint(r.x, r.y, r.width, r.height);
@@ -138,15 +134,14 @@ public class VisibleTile extends JPanel implements MouseListener, FocusListener,
     }
 
     public void mouseClicked(MouseEvent e) {
+    }
+
+    public void mousePressed(MouseEvent e) {
         Rectangle r = getBounds();
         r.setLocation(0, 0);
         if (r.contains(e.getPoint())) {
             edit();
-            requestFocus();
         }
-    }
-
-    public void mousePressed(MouseEvent e) {
     }
 
     public void mouseReleased(MouseEvent e) {
