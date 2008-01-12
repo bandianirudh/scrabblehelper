@@ -8,7 +8,6 @@ package gui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import javax.swing.JTextField;
 import persistence.SavedBoard;
 import scrabbletools.BoardLayout;
 import scrabbletools.LetterScores;
@@ -41,8 +40,8 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
     public ScrabbleBoardPanel() {
         initComponents();
         GridLayout gl = new GridLayout();
-        gl.setColumns(15);
-        gl.setRows(15);
+        gl.setColumns(ROWS);
+        gl.setRows(COLS);
         gl.setVgap(0);
         gl.setHgap(0);
         setLayout(gl);
