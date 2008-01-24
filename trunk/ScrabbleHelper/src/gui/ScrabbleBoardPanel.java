@@ -92,6 +92,7 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
     
     public void letterEditStarted(VisibleTile vt) {
         clearTemporaryWordPlacement();
+        fireScrabbleBoardSelection(vt);
     }
     
     public void letterEditStopped(VisibleTile vt) {
@@ -248,6 +249,12 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
     public void fireScrabbleBoardChange() {
         for (ScrabbleBoardListener sbl : scrabbleBoardListeners) {
             sbl.boardChanged();
+        }
+    }
+    
+   public void fireScrabbleBoardSelection(VisibleTile vt) {
+        for (ScrabbleBoardListener sbl : scrabbleBoardListeners) {
+            sbl.tileSelected(vt);
         }
     }
 

@@ -87,6 +87,12 @@ public class ScrabbleWindow extends javax.swing.JFrame {
             public void boardChanged() {
                 wordPlacementList1.getModel().clear();
             }
+
+            public void tileSelected(VisibleTile vt) {
+                wordPlacementList1.clearSelection();
+            }
+            
+            
         });
     }
 
