@@ -18,10 +18,10 @@ public class WordPlacement implements Comparable {
         this.occupied = occupied;
     }
     
-    public char[] generateDisplayedPlacedLetters() {
+    public char[] getDisplayedPlacedLetters() {
         char[] result = new char[placedLetters.length];
         for (int i = 0; i < placedLetters.length; i++) {
-            if (LetterScores.isValidLetter(occupied[i])) {
+            if (LetterScores.isValidLetter(getOccupied()[i])) {
                 result[i] = '_';
             } else {
                 result[i] = placedLetters[i];
@@ -29,11 +29,12 @@ public class WordPlacement implements Comparable {
         }
         return result;
     }
+    
 
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("Letters Placed:  ");
-        sb.append(generateDisplayedPlacedLetters());
+        sb.append(getDisplayedPlacedLetters());
         sb.append("\n");
         sb.append(line.toString());
         sb.append("\n\nResulting words:\n");
@@ -56,9 +57,9 @@ public class WordPlacement implements Comparable {
         }
         WordPlacement other = (WordPlacement)o;
         int otherScore = other.getScore();
-        if (getScore() < otherScore) {
+        if (getScore() > otherScore) {
             return -1;            
-        } else if (getScore() > otherScore) {
+        } else if (getScore() < otherScore) {
             return 1;
         } else {
             return 0;
@@ -97,5 +98,13 @@ public class WordPlacement implements Comparable {
 
     public void setPlacedLetters(char[] placedLetters) {
         this.placedLetters = placedLetters;
+    }
+
+    public char[] getOccupied() {
+        return occupied;
+    }
+
+    public void setOccupied(char[] occupied) {
+        this.occupied = occupied;
     }
 }

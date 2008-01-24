@@ -38,6 +38,7 @@ public class VisibleTile extends JPanel implements MouseListener, FocusListener,
     int row;
     ScrabbleBoardPanel panel;
     private boolean editing = false;
+    private boolean temporaryDisplay = false;
 
     public VisibleTile(ScrabbleBoardPanel panel, char tileType, int row, int col) {
         super();
@@ -86,9 +87,11 @@ public class VisibleTile extends JPanel implements MouseListener, FocusListener,
     public void stopEditing() {
         setEditing(false);
         repaint();
+        panel.letterEditStopped(this);
     }
 
     public void edit() {
+        panel.letterEditStarted(this);
         requestFocus();
         setEditing(true);
         repaint();
@@ -120,7 +123,12 @@ public class VisibleTile extends JPanel implements MouseListener, FocusListener,
             letterLabel.paint(g);
         } else if (letter != LetterScores.EMPTY_SQUARE) {
             //If there is a tile here, draw it like a tile.
-            Color emptyColor = BoardLayout.getColorFromTileType(BoardLayout.SINGLE_LETTER);
+            Color emptyColor;
+            if (!isTemporaryDisplay()) {
+                emptyColor = BoardLayout.getColorFromTileType(BoardLayout.SINGLE_LETTER);
+            } else {
+                emptyColor = new Color(0, 255, 0);  //Show that the tile is temporary...  green should do.
+            }
             g.setColor(new Color(emptyColor.getRed(), emptyColor.getGreen(), emptyColor.getBlue(), 160));
             g.fillRect(1, 1, getWidth() - 1, getHeight() - 1);
             g.fillRect(2, 2, getWidth() - 3, getHeight() - 3);
@@ -254,5 +262,13 @@ public class VisibleTile extends JPanel implements MouseListener, FocusListener,
                         ScrabbleBoardPanel.Direction.RIGHT);
             }
         });
+    }
+
+    public boolean isTemporaryDisplay() {
+        return temporaryDisplay;
+    }
+
+    public void setTemporaryDisplay(boolean temporaryDisplay) {
+        this.temporaryDisplay = temporaryDisplay;
     }
 }

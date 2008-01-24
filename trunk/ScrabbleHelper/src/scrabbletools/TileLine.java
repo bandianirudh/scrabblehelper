@@ -29,6 +29,14 @@ public class TileLine {
         }
         return result;
     }
+    
+    public String getDirection() {
+        if (isAcross) {
+            return "Across";
+        } else {
+            return "Down";
+        }
+    }
 
     @Override
     public String toString() {
