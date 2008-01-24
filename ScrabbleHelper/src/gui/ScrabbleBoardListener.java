@@ -11,4 +11,5 @@ package gui;
  */
 public interface ScrabbleBoardListener {
     public void boardChanged();
+    public void tileSelected(VisibleTile vt);
 }
