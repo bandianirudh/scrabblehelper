@@ -8,9 +8,13 @@ package gui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.List;
 import persistence.SavedBoard;
 import scrabbletools.BoardLayout;
 import scrabbletools.LetterScores;
+import scrabbletools.TileLine;
+import scrabbletools.WordPlacement;
 
 /**
  *
@@ -22,6 +26,8 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
     public static final int COLS = 15;
     VisibleTile[][] tiles;
     private boolean moveAcross = true;
+    
+    public List<ScrabbleBoardListener> scrabbleBoardListeners = new ArrayList<ScrabbleBoardListener>();
 
     public boolean isMoveAcross() {
         return moveAcross;
@@ -46,6 +52,50 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
         gl.setHgap(0);
         setLayout(gl);
         initializeTiles();
+    }
+    
+    public void putWordPlacement(WordPlacement wp, boolean temporary) {
+        clearTemporaryWordPlacement();
+        TileLine tl = wp.getLine();
+        int startRow = tl.startRow;
+        int startCol = tl.startCol;
+        
+        int currentRow = startRow;
+        int currentCol = startCol;
+        
+        for (int i = 0; i < tl.length; i++) {
+            if (tl.isAcross) {
+                currentCol = startCol + i;
+            } else {
+                currentRow = startRow + i;
+            }
+            
+            VisibleTile vt = tiles[currentRow][currentCol];
+            if (!Character.isLetter(wp.getOccupied()[i])) {
+                vt.setTemporaryDisplay(temporary);
+                vt.setLetter(wp.getPlacedLetters()[i]);
+            }
+        }
+    }
+    
+    public void clearTemporaryWordPlacement() {
+        for (int col = 0; col < COLS; col++) {
+            for (int row = 0; row < ROWS; row++) {
+                VisibleTile vt = tiles[row][col];
+                if (vt.isTemporaryDisplay()) {
+                    vt.setLetter(LetterScores.EMPTY_SQUARE);
+                    vt.setTemporaryDisplay(false);
+                }
+            }
+        }
+    }
+    
+    public void letterEditStarted(VisibleTile vt) {
+        clearTemporaryWordPlacement();
+    }
+    
+    public void letterEditStopped(VisibleTile vt) {
+        
     }
 
     public void paint(Graphics g) {
@@ -103,6 +153,7 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
     }
 
     public void letterEnterred(VisibleTile tile) {
+        fireScrabbleBoardChange();
         if (isMoveAcross()) {
             moveFocus(tile, Direction.RIGHT);
         } else {
@@ -175,10 +226,29 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
         char[][] result = new char[tiles.length][tiles[0].length];
         for (int row = 0; row < tiles.length; row++) {
             for (int col = 0; col < tiles[0].length; col++) {
-                result[row][col] = tiles[row][col].getLetter();
+                VisibleTile vt = tiles[row][col];
+                if (!vt.isTemporaryDisplay()) {
+                    result[row][col] = vt.getLetter();
+                } else {
+                    result[row][col] = LetterScores.EMPTY_SQUARE;
+                }
             }
         }
         return result;
+    }
+    
+    public void addScrabbleBoardListener(ScrabbleBoardListener sbl) {
+        scrabbleBoardListeners.add(sbl);
+    }
+    
+    public void clearScrabbleBoardListeners() {
+        scrabbleBoardListeners.clear();
+    }
+    
+    public void fireScrabbleBoardChange() {
+        for (ScrabbleBoardListener sbl : scrabbleBoardListeners) {
+            sbl.boardChanged();
+        }
     }
 
     /** This method is called from within the constructor to
