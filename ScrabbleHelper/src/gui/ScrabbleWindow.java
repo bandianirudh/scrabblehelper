@@ -48,7 +48,6 @@ public class ScrabbleWindow extends javax.swing.JFrame {
         setResizable(false);
         rackLetterField.setDocument(new PlainDocument() {
 
-            @Override
             public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
                 String upCase = str.toUpperCase();
                 if (this.getLength() >= 7) {
@@ -156,7 +155,16 @@ public class ScrabbleWindow extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         resultDisplay = new javax.swing.JTextArea();
         scrabbleBoard = new gui.ScrabbleBoardPanel();
-        rackLetterField = new javax.swing.JTextField();
+        rackLetterField = new javax.swing.JTextField() {
+            public String getText() {
+                if (super.getText().isEmpty()) {
+                    return "Rack Letters";
+                } else {
+                    return super.getText();
+                }
+            }
+        }
+        ;
         jButton1 = new javax.swing.JButton();
         anagramButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
