@@ -141,9 +141,6 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rackLetterFieldActionPerformed"/>
         <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="rackLetterFieldKeyReleased"/>
       </Events>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTextField() {&#xa;    public String getText() {&#xa;        if (super.getText().isEmpty()) {&#xa;            return &quot;Rack Letters&quot;;&#xa;        } else {&#xa;            return super.getText();&#xa;        }&#xa;    }&#xa;}&#xa;    "/>
-      </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="jButton1">
       <Properties>
