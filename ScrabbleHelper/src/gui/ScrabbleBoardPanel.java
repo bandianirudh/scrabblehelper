@@ -8,6 +8,7 @@ package gui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import persistence.SavedBoard;
@@ -119,6 +120,7 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
             g.drawLine(currentX, 0, currentX, getHeight());
         }
     }
+    
 
     public void setBoard(SavedBoard sb) {
         char[][] boardLetters = sb.getBoard();
@@ -131,25 +133,42 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
     }
 
     public void initializeTiles() {
-        VisibleTile[][] tiles = new VisibleTile[((GridLayout) getLayout()).getRows()][];
+        VisibleTile[][] newTiles = new VisibleTile[((GridLayout) getLayout()).getRows()][];
         for (int row = 0; row < ((GridLayout) getLayout()).getRows(); row++) {
-            tiles[row] = new VisibleTile[((GridLayout) getLayout()).getColumns()];
+            newTiles[row] = new VisibleTile[((GridLayout) getLayout()).getColumns()];
             for (int col = 0; col < ((GridLayout) getLayout()).getColumns(); col++) {
-                tiles[row][col] = new VisibleTile(this,
+                newTiles[row][col] = new VisibleTile(this,
                         BoardLayout.charBoardValues[row][col],
                         row, col);
-                add(tiles[row][col]);
-                tiles[row][col].letter = LetterScores.EMPTY_SQUARE;
+                add(newTiles[row][col]);
+                newTiles[row][col].letter = LetterScores.EMPTY_SQUARE;
             }
         }
-        this.tiles = tiles;
+        this.tiles = newTiles;
     }
 
     public void letterDeleted(VisibleTile tile) {
+        fireScrabbleBoardChange();
         if (isMoveAcross()) {
             moveFocus(tile, Direction.LEFT);
         } else {
             moveFocus(tile, Direction.UP);
+        }
+    }
+    
+    public void moveBackward(VisibleTile tile) {
+        if (isMoveAcross()) {
+            moveFocus(tile, Direction.LEFT);
+        } else {
+            moveFocus(tile, Direction.UP);
+        }
+    }
+    
+    public void moveForward(VisibleTile tile) {
+        if (isMoveAcross()) {
+            moveFocus(tile, Direction.RIGHT);
+        } else {
+            moveFocus(tile, Direction.DOWN);
         }
     }
 
@@ -221,6 +240,21 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
         }
         tile.stopEditing();
         tiles[row][col].edit();
+    }
+    
+    public int getEdgeTileType(VisibleTile vt) {
+        Point p = vt.getLocationOnBoard();
+        if (p.x == COLS - 1) {
+            return 1;
+        } else if (p.y == ROWS - 1) {
+            return -1;
+        }
+        return 0;
+    }
+    
+    public void toggleMoveDirection(VisibleTile vt) {
+        setMoveAcross(!isMoveAcross());
+        vt.repaint();
     }
 
     public char[][] getCharArray() {

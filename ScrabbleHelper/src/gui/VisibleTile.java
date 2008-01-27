@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
@@ -56,6 +57,7 @@ public class VisibleTile extends JPanel implements MouseListener, FocusListener,
         registerKeys();
 
         setFocusable(true);
+        setFocusTraversalKeysEnabled(false);
 
         BorderLayout bl = new BorderLayout();
         setLayout(bl);
@@ -107,9 +109,9 @@ public class VisibleTile extends JPanel implements MouseListener, FocusListener,
         if (isEditing()) {
             //Draw the box for editing
             g.setColor(Color.WHITE);
-            g.fillRect(1, 1, getWidth(), getHeight());
+            g.fillRect(1, 1, getWidth() - 1, getHeight() - 1);
             g.setColor(new Color(100, 100, 255, 200));
-            g.fillRect(1, 1, getWidth(), getHeight());
+            g.fillRect(1, 1, getWidth() - 1, getHeight() - 1);
 
             g.setColor(Color.BLACK);
             int lineLength = 5;
@@ -120,6 +122,7 @@ public class VisibleTile extends JPanel implements MouseListener, FocusListener,
                 g.drawLine(getWidth() / 2, 1, getWidth() / 2, lineLength);
                 g.drawLine(getWidth() / 2, getHeight() - lineLength, getWidth() / 2, getHeight());
             }
+
             letterLabel.paint(g);
         } else if (letter != LetterScores.EMPTY_SQUARE) {
             //If there is a tile here, draw it like a tile.
@@ -139,9 +142,26 @@ public class VisibleTile extends JPanel implements MouseListener, FocusListener,
             g.fillRect(4, 4, getWidth() - 7, getHeight() - 7);
             letterLabel.paint(g);
         }
+
+        //fix problem drawing on the edges of the board
+        g.setColor(Color.BLACK);
+        switch (panel.getEdgeTileType(this)) {
+
+            case (-1):
+                g.drawLine(0, getHeight() - 1, getWidth() - 1, getHeight() - 1);
+                break;
+
+            case (1):
+                g.drawLine(getWidth() - 1, 0, getWidth() - 1, getHeight() - 1);
+                break;
+        }
     }
 
     public void mouseClicked(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON3 ||
+                (e.getClickCount() >= 2 && e.getButton() == MouseEvent.BUTTON1)) {
+            panel.toggleMoveDirection(this);
+        }
     }
 
     public void mousePressed(MouseEvent e) {
@@ -262,6 +282,37 @@ public class VisibleTile extends JPanel implements MouseListener, FocusListener,
                         ScrabbleBoardPanel.Direction.RIGHT);
             }
         });
+
+        getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
+                "ENTER");
+        getActionMap().put("ENTER", new AbstractAction() {
+
+            public void actionPerformed(ActionEvent e) {
+                sbp.toggleMoveDirection(VisibleTile.this);
+            }
+        });
+
+        getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0),
+                "TAB");
+        getActionMap().put("TAB", new AbstractAction() {
+
+            public void actionPerformed(ActionEvent e) {
+                sbp.moveForward(VisibleTile.this);
+            }
+        });
+
+        getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, KeyEvent.SHIFT_DOWN_MASK),
+                "TAB");
+        getActionMap().put("TAB", new AbstractAction() {
+
+            public void actionPerformed(ActionEvent e) {
+                sbp.moveForward(VisibleTile.this);
+            }
+        });
+    }
+
+    public Point getLocationOnBoard() {
+        return new Point(col, row);
     }
 
     public boolean isTemporaryDisplay() {

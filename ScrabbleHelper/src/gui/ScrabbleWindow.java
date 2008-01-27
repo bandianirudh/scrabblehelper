@@ -12,7 +12,6 @@ import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
-import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.AttributeSet;
@@ -155,16 +154,7 @@ public class ScrabbleWindow extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         resultDisplay = new javax.swing.JTextArea();
         scrabbleBoard = new gui.ScrabbleBoardPanel();
-        rackLetterField = new javax.swing.JTextField() {
-            public String getText() {
-                if (super.getText().isEmpty()) {
-                    return "Rack Letters";
-                } else {
-                    return super.getText();
-                }
-            }
-        }
-        ;
+        rackLetterField = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         anagramButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
