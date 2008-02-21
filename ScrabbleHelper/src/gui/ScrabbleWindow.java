@@ -113,7 +113,7 @@ public class ScrabbleWindow extends javax.swing.JFrame {
         
         utils.setDictionary(StaticFields.getDictionary());
         utils.getBoard().setLetters(scrabbleBoard.getCharArray());
-        utils.setLetters(rackLetterField.getText().toUpperCase().toCharArray());
+        utils.setRackLetters(rackLetterField.getText().toUpperCase().toCharArray());
         
         long startTime = System.currentTimeMillis();
         List<WordPlacement> words = utils.findAllBoardPossibilities();

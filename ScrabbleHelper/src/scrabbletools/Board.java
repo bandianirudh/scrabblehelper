@@ -20,6 +20,11 @@ public class Board {
     public Board() {
         initializeLetters();
     }
+    
+    public Board(char[][] letters) {
+        this();
+        setLetters(letters);
+    }
 
     public void initializeLetters() {
         setLetters(new char[BoardLayout.charBoardValues.length][]);

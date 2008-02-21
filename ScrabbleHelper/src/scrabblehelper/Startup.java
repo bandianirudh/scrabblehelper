@@ -7,6 +7,7 @@ package scrabblehelper;
 import gui.ErrorWindow;
 import gui.LoadingWindow;
 import gui.ScrabbleWindow;
+import gui.mainwindow.MainWindow;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
@@ -33,7 +34,13 @@ public class Startup {
         }
 
         try {
-            new ScrabbleWindow().setVisible(true);
+            //new ScrabbleWindow().setVisible(true);
+            java.awt.EventQueue.invokeLater(new Runnable() {
+
+                public void run() {
+                    new MainWindow().setVisible(true);
+                }
+            });
         } catch (Exception ex) {
             new ErrorWindow(ex);
         }

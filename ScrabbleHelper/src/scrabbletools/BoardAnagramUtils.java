@@ -146,7 +146,7 @@ public class BoardAnagramUtils {
         return getLetterPossibilitiesInLine(new TileLine(startRow, startCol, length, isAcross));
     }
     
-    public void setLetters(char[] letters) {
+    public void setRackLetters(char[] letters) {
         rack.letters = letters;
     }
 

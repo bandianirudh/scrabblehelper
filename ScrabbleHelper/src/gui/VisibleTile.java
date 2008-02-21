@@ -176,7 +176,7 @@ public class VisibleTile extends JPanel implements MouseListener, FocusListener,
     }
 
     public void mouseEntered(MouseEvent e) {
-        if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
+        if (e.getModifiers() == MouseEvent.BUTTON1_MASK && panel.getFocusedVisibleTile() != null) {
             edit();
         }
     }
