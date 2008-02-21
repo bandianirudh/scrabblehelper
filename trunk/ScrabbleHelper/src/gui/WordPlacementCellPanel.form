@@ -31,17 +31,17 @@
   <SubComponents>
     <Component class="gui.TwoJLabelPanel" name="wordLabel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new gui.TwoJLabelPanel(&quot;Word:&quot;, &quot;&quot;)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new gui.TwoJLabelPanel(&quot; Word:&quot;, &quot;&quot;)"/>
       </AuxValues>
     </Component>
     <Component class="gui.TwoJLabelPanel" name="locationLabel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new gui.TwoJLabelPanel(&quot;Location:&quot;, &quot;&quot;)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new gui.TwoJLabelPanel(&quot; Location:&quot;, &quot;&quot;)"/>
       </AuxValues>
     </Component>
     <Component class="gui.TwoJLabelPanel" name="scoreLabel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new gui.TwoJLabelPanel(&quot;Score:&quot;, &quot;&quot;)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new gui.TwoJLabelPanel(&quot; Score:&quot;, &quot;&quot;)"/>
       </AuxValues>
     </Component>
   </SubComponents>

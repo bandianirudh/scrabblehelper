@@ -9,8 +9,15 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import persistence.SavedBoard;
 import scrabbletools.BoardLayout;
 import scrabbletools.LetterScores;
@@ -21,7 +28,8 @@ import scrabbletools.WordPlacement;
  *
  * @author  Nick
  */
-public class ScrabbleBoardPanel extends javax.swing.JPanel {
+public class ScrabbleBoardPanel extends javax.swing.JPanel 
+        implements ListSelectionListener, ListDataListener {
 
     public static final int ROWS = 15;
     public static final int COLS = 15;
@@ -76,6 +84,10 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
                 vt.setTemporaryDisplay(temporary);
                 vt.setLetter(wp.getPlacedLetters()[i]);
             }
+        }
+        
+        if (!temporary) {
+            fireScrabbleBoardChange();
         }
     }
     
@@ -272,6 +284,17 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
         return result;
     }
     
+    public VisibleTile getFocusedVisibleTile() {
+        for (VisibleTile[] vtArray : tiles) {
+            for (VisibleTile vt : vtArray) {
+                if (vt.isFocusOwner()) {
+                    return vt;
+                }
+            }
+        }
+        return null;
+    }
+    
     public void addScrabbleBoardListener(ScrabbleBoardListener sbl) {
         scrabbleBoardListeners.add(sbl);
     }
@@ -303,6 +326,42 @@ public class ScrabbleBoardPanel extends javax.swing.JPanel {
         setPreferredSize(new java.awt.Dimension(450, 450));
         setLayout(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    public void valueChanged(ListSelectionEvent e) {
+        if (e.getSource() instanceof WordPlacementList) {
+            Object o  = ((WordPlacementList)e.getSource()).getSelectedValue();
+            if (o instanceof WordPlacement) {
+                putWordPlacement((WordPlacement)o, true);
+            } else {
+                clearTemporaryWordPlacement();
+            }
+        }
+    }
+    
+    public MouseListener getMouseListenerForWordPlacementList() {
+        return new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+                    if (e.getSource() instanceof WordPlacementList) {
+                        Object o = ((WordPlacementList)e.getSource()).getSelectedValue();
+                        if (o instanceof WordPlacement) {
+                            putWordPlacement((WordPlacement)o, false);
+                        }
+                    }
+                }
+            }
+        };
+    }
+
+    public void intervalAdded(ListDataEvent e) {
+    }
+
+    public void intervalRemoved(ListDataEvent e) {
+    }
+
+    public void contentsChanged(ListDataEvent e) {
+        clearTemporaryWordPlacement();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

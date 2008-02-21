@@ -98,9 +98,9 @@ public class WordPlacementCellPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         twoJLabelPanel1 = new gui.TwoJLabelPanel();
-        wordLabel = new gui.TwoJLabelPanel("Word:", "");
-        locationLabel = new gui.TwoJLabelPanel("Location:", "");
-        scoreLabel = new gui.TwoJLabelPanel("Score:", "");
+        wordLabel = new gui.TwoJLabelPanel(" Word:", "");
+        locationLabel = new gui.TwoJLabelPanel(" Location:", "");
+        scoreLabel = new gui.TwoJLabelPanel(" Score:", "");
 
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         setLayout(new java.awt.GridLayout(0, 1));
