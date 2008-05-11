@@ -21,6 +21,7 @@ public class MainWindow extends javax.swing.JFrame {
         
         tabbedPane.insertTab("Board Solver", null, new BoardSolverPanel(), "", 0);
         tabbedPane.insertTab("Word Tools", null, new WordToolsPanel(), "", 1);
+        tabbedPane.insertTab("About", null, new AboutPanel(), "", 2);
 
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -45,7 +46,6 @@ public class MainWindow extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setResizable(false);
 
         jMenu1.setText("File");
 
@@ -72,7 +72,7 @@ public class MainWindow extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 512, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
